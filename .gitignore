@@ -6,6 +6,7 @@ node_modules
 coverage
 dist
 *.tsbuildinfo
+.worktrees
 .codex/environments
 __pycache__
 *.pyc
