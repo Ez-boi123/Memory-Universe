@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RelationshipStatus {
+  pending
+  active
+  frozen
+}
+
+enum InviteStatus {
+  pending
+  accepted
+  expired
+  revoked
+}
+
+enum RelationshipMemberRole {
+  owner
+  member
+}
+
+enum EventType {
+  anniversary
+  travel
+  daily
+  festival
+}
+
+enum PhotoArchiveStatus {
+  pending_archive
+  archived
+}
+
+model User {
+  id              String               @id @default(cuid())
+  email           String               @unique
+  emailVerified   DateTime?
+  name            String?
+  image           String?
+  passwordHash    String
+  displayName     String
+  avatarUrl       String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  accounts        Account[]
+  sessions        Session[]
+  passwordResets  PasswordResetToken[]
+  relationships   RelationshipMember[]
+  createdInvites  Invite[]             @relation("InviteCreatedBy")
+  acceptedInvites Invite[]             @relation("InviteAcceptedBy")
+  createdEvents   MemoryEvent[]        @relation("EventCreatedBy")
+  updatedEvents   MemoryEvent[]        @relation("EventUpdatedBy")
+  eventVersions   MemoryEventVersion[]
+  uploadedPhotos  Photo[]
+  messages        Message[]
+
+  @@map("users")
+}
+
+model Relationship {
+  id         String               @id @default(cuid())
+  status     RelationshipStatus
+  createdBy  String
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+  members    RelationshipMember[]
+  invites    Invite[]
+  events     MemoryEvent[]
+  photos     Photo[]
+  messages   Message[]
+
+  @@map("relationships")
+}
+
+model RelationshipMember {
+  id             String                 @id @default(cuid())
+  relationshipId String
+  userId         String
+  role           RelationshipMemberRole @default(member)
+  joinedAt       DateTime               @default(now())
+  relationship   Relationship           @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([relationshipId, userId])
+  @@map("relationship_members")
+}
+
+model Invite {
+  id             String       @id @default(cuid())
+  relationshipId String
+  token          String       @unique
+  code           String?      @unique
+  status         InviteStatus @default(pending)
+  createdBy      String
+  expiresAt      DateTime
+  acceptedBy     String?
+  acceptedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  relationship   Relationship @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  creator        User         @relation("InviteCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  acceptor       User?        @relation("InviteAcceptedBy", fields: [acceptedBy], references: [id], onDelete: SetNull)
+
+  @@map("invites")
+}
+
+model MemoryEvent {
+  id             String               @id @default(cuid())
+  relationshipId String
+  title          String
+  body           String
+  memoryDate     DateTime
+  locationText   String?
+  eventType      EventType?
+  createdBy      String
+  updatedBy      String
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  deletedAt      DateTime?
+  relationship   Relationship         @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  creator        User                 @relation("EventCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  updater        User                 @relation("EventUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
+  versions       MemoryEventVersion[]
+  eventPhotos    EventPhoto[]
+
+  @@index([relationshipId, memoryDate(sort: Desc)])
+  @@map("memory_events")
+}
+
+model MemoryEventVersion {
+  id               String      @id @default(cuid())
+  eventId          String
+  title            String
+  body             String
+  memoryDate       DateTime
+  locationText     String?
+  eventType        EventType?
+  editedBy         String
+  versionCreatedAt DateTime    @default(now())
+  event            MemoryEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  editor           User        @relation(fields: [editedBy], references: [id], onDelete: Cascade)
+
+  @@index([eventId, versionCreatedAt(sort: Desc)])
+  @@map("memory_event_versions")
+}
+
+model Photo {
+  id             String             @id @default(cuid())
+  relationshipId String
+  uploadedBy     String
+  originalUrl    String
+  displayUrl     String
+  thumbnailUrl   String
+  memoryDate     DateTime?
+  capturedAt     DateTime?
+  uploadedAt     DateTime
+  archiveStatus  PhotoArchiveStatus
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  relationship   Relationship       @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  uploader       User               @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  eventPhotos    EventPhoto[]
+
+  @@index([relationshipId, memoryDate(sort: Desc)])
+  @@index([relationshipId, archiveStatus])
+  @@map("photos")
+}
+
+model EventPhoto {
+  id      String      @id @default(cuid())
+  eventId String
+  photoId String
+  event   MemoryEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  photo   Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, photoId])
+  @@map("event_photos")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  relationshipId String
+  authorId       String
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  relationship   Relationship @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  author         User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([relationshipId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+model Account {
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionToken])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("password_reset_tokens")
+}
+
+// TODO: Credentials auth should remain email/password-only in MVP.
+// TODO: Real register/sign-in/reset flows will be implemented in the next backend phase.
