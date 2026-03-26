@@ -6,3 +6,6 @@ node_modules
 coverage
 dist
 *.tsbuildinfo
+.codex/environments
+__pycache__
+*.pyc
