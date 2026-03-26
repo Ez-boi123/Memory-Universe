@@ -23,7 +23,7 @@ export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(db),
   trustHost: true,
   session: {
-    strategy: 'database',
+    strategy: 'jwt',
   },
   pages: {
     signIn: '/sign-in',
@@ -69,30 +69,34 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      const membership = await db.relationshipMember.findFirst({
-        where: {
-          userId: user.id,
-        },
-        include: {
-          relationship: true,
-        },
-        orderBy: {
-          joinedAt: 'asc',
-        },
-      });
+    async jwt({ token, user }) {
+      if (user) {
+        token.relationshipId = user.relationshipId ?? null;
+        token.relationshipStatus = user.relationshipStatus ?? null;
+        token.authState = user.authState ?? 'authenticated';
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      const userId = typeof token.sub === 'string' ? token.sub : session.user?.id;
 
       return {
         ...buildPlaceholderSession(session),
         user: {
           ...session.user,
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          relationshipId: membership?.relationshipId ?? null,
-          relationshipStatus: membership?.relationship.status ?? null,
-          authState: 'authenticated' as const,
+          id: userId ?? 'placeholder-user-id',
+          name: session.user?.name ?? null,
+          email: session.user?.email ?? null,
+          image: session.user?.image ?? null,
+          relationshipId:
+            typeof token.relationshipId === 'string' ? token.relationshipId : null,
+          relationshipStatus:
+            typeof token.relationshipStatus === 'string'
+              ? token.relationshipStatus
+              : null,
+          authState:
+            token.authState === 'authenticated' ? 'authenticated' : 'placeholder',
         },
       };
     },

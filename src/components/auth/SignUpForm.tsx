@@ -6,22 +6,29 @@ import { AuthCard } from './AuthCard';
 
 interface SignUpFormProps {
   error?: string;
+  callbackUrl?: string;
 }
 
-export function SignUpForm({ error }: SignUpFormProps) {
+export function SignUpForm({ error, callbackUrl }: SignUpFormProps) {
   return (
     <AuthCard
       eyebrow="Auth"
       title="Create Your Account"
       description="Set up your email-and-password account first. Relationship binding comes in the next step."
+      mode="sign-up"
       error={error}
       footer={
         <p>
-          Already have an account? <Link href="/sign-in">Sign in</Link>.
+          Already have an account?{' '}
+          <Link href={callbackUrl ? `/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/sign-in'}>
+            Sign in
+          </Link>
+          .
         </p>
       }
     >
       <form action={registerAction} className="auth-form">
+        <input name="callbackUrl" type="hidden" value={callbackUrl ?? ''} />
         <label className="auth-field">
           <span>Display Name</span>
           <input autoComplete="nickname" name="displayName" required type="text" />
@@ -44,6 +51,10 @@ export function SignUpForm({ error }: SignUpFormProps) {
             type="password"
           />
         </label>
+        <div className="auth-form-note">
+          We create the account first so the relationship space, invite flow, and shared permissions
+          can attach to a stable identity.
+        </div>
         <button className="auth-submit" type="submit">
           Create Account
         </button>

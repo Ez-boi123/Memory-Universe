@@ -1,3 +1,4 @@
+import { getDatabaseConfigurationError, isDatabaseConfigured } from '@/lib/env';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
 import { validateRegisterInput } from '@/lib/validation/auth';
 import { authRepository } from '@/server/repositories/auth-repository';
@@ -25,6 +26,13 @@ export const authService = {
       return {
         ok: false as const,
         errors: validation.errors,
+      };
+    }
+
+    if (!isDatabaseConfigured()) {
+      return {
+        ok: false as const,
+        errors: [getDatabaseConfigurationError()],
       };
     }
 
@@ -57,6 +65,13 @@ export const authService = {
     email: string;
     password: string;
   }) => {
+    if (!isDatabaseConfigured()) {
+      return {
+        ok: false as const,
+        error: getDatabaseConfigurationError(),
+      };
+    }
+
     const user = await authRepository.findUserByEmail(email.trim().toLowerCase());
 
     if (!user) {
