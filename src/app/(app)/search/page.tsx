@@ -1,5 +1,5 @@
-import { SearchPlaceholder } from '@/components/universe/SearchPlaceholder';
+import { redirect } from 'next/navigation';
 
 export default function SearchPage() {
-  return <SearchPlaceholder />;
+  redirect('/universe');
 }

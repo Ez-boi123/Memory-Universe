@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface PlaceholderPageProps {
   eyebrow: string;
   title: string;
@@ -12,19 +14,17 @@ export function PlaceholderPage({
   bullets = [],
 }: PlaceholderPageProps) {
   return (
-    <div className="page-shell">
-      <section className="page-card">
-        <p className="page-eyebrow">{eyebrow}</p>
-        <h1 className="page-title">{title}</h1>
-        <p className="page-description">{description}</p>
-        {bullets.length > 0 ? (
-          <ul className="placeholder-list">
-            {bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        ) : null}
-      </section>
-    </div>
+    <section className="placeholder-page-card">
+      <p className="page-eyebrow">{eyebrow}</p>
+      <h1 className="page-title">{title}</h1>
+      <p className="page-description">{description}</p>
+      {bullets.length > 0 ? (
+        <ul className="placeholder-list">
+          {bullets.map((bullet) => (
+            <li key={bullet}>{bullet}</li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
   );
 }

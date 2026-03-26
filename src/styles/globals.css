@@ -444,10 +444,81 @@ main {
   margin-top: 0;
 }
 
+.module-page-layout {
+  display: grid;
+  gap: 24px;
+}
+
+.module-page-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: end;
+  padding: 28px 32px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 253, 249, 0.96), rgba(243, 236, 227, 0.96));
+  box-shadow: 0 18px 48px rgba(54, 46, 36, 0.08);
+}
+
+.module-page-header .page-description {
+  max-width: 60ch;
+}
+
+.module-page-action {
+  align-self: end;
+  padding: 12px 18px;
+  border: 1px solid rgba(65, 86, 107, 0.18);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fffdf9, #f1e8dc);
+  color: var(--accent-strong);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.placeholder-page-card {
+  padding: 28px 32px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: rgba(255, 253, 249, 0.94);
+  box-shadow: 0 16px 44px rgba(54, 46, 36, 0.07);
+}
+
+.module-page-layout .placeholder-grid {
+  margin-top: 0;
+}
+
+.module-page-layout .placeholder-page-card .page-description {
+  margin-top: 0;
+}
+
 .two-column {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 24px;
+}
+
+@media (max-width: 760px) {
+  .module-page-layout {
+    gap: 18px;
+  }
+
+  .module-page-header {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px;
+  }
+
+  .module-page-action {
+    justify-self: start;
+  }
+
+  .placeholder-page-card {
+    padding: 24px;
+  }
 }
 
 .auth-shell {
