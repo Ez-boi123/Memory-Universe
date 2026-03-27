@@ -1,11 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
 import { ConstellationPage } from './ConstellationPage';
 
 describe('ConstellationPage', () => {
-  it('renders the floating action inside the composed page', () => {
+  it('renders the floating action and wires the composer open/close flow', async () => {
+    const user = userEvent.setup();
+
     render(
       <ConstellationPage
         model={{
@@ -36,6 +39,10 @@ describe('ConstellationPage', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: 'Write a new constellation message' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Write a new constellation message' }));
+    expect(screen.getByRole('dialog', { name: 'Write Into Your Shared Sky' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('dialog', { name: 'Write Into Your Shared Sky' })).toBeNull();
   });
 });
