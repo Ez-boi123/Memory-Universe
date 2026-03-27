@@ -271,6 +271,69 @@ main {
   font-size: 17px;
 }
 
+.constellation-page {
+  display: grid;
+  gap: 24px;
+}
+
+.constellation-hero {
+  position: relative;
+  overflow: clip;
+  min-height: 420px;
+  padding: 36px 36px 44px;
+  border: 1px solid rgba(233, 226, 246, 0.12);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(117, 92, 255, 0.28), transparent 24%),
+    radial-gradient(circle at 74% 30%, rgba(255, 114, 206, 0.18), transparent 26%),
+    linear-gradient(180deg, rgba(11, 13, 29, 0.96), rgba(8, 10, 22, 0.92));
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.26);
+}
+
+.constellation-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+
+.constellation-hero-title {
+  margin: 0;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 0.96;
+}
+
+.constellation-hero-lead,
+.constellation-hero-description {
+  max-width: 560px;
+  color: rgba(236, 230, 248, 0.88);
+}
+
+.constellation-hero-lead {
+  margin: 16px 0 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.constellation-hero-description {
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.constellation-hero-stars {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.7), transparent 1.8px),
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.45), transparent 1.4px),
+    radial-gradient(circle at 56% 14%, rgba(255, 255, 255, 0.5), transparent 1.6px),
+    radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 0.65), transparent 1.8px),
+    radial-gradient(circle at 84% 64%, rgba(255, 255, 255, 0.35), transparent 1.4px),
+    radial-gradient(circle at 18% 74%, rgba(255, 255, 255, 0.4), transparent 1.4px);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
 .universe-hero-aside {
   display: grid;
   align-content: start;
