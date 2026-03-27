@@ -378,6 +378,17 @@ main {
   box-shadow: 0 24px 72px rgba(0, 0, 0, 0.26);
 }
 
+.constellation-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 34%, rgba(255, 255, 255, 0.12), transparent 12%),
+    radial-gradient(circle at 68% 48%, rgba(173, 143, 255, 0.18), transparent 18%),
+    radial-gradient(circle at 78% 24%, rgba(255, 143, 214, 0.12), transparent 14%);
+  pointer-events: none;
+}
+
 .constellation-hero-copy {
   position: relative;
   z-index: 1;
@@ -425,6 +436,7 @@ main {
 .constellation-message-stream {
   display: grid;
   gap: 18px;
+  padding-bottom: 24px;
 }
 
 .constellation-message-card,
@@ -438,11 +450,13 @@ main {
 }
 
 .constellation-message-card--left {
-  margin-right: 64px;
+  justify-self: start;
+  max-width: min(560px, calc(100% - 72px));
 }
 
 .constellation-message-card--right {
-  margin-left: 64px;
+  justify-self: end;
+  max-width: min(560px, calc(100% - 72px));
 }
 
 .constellation-message-meta {
@@ -625,6 +639,14 @@ main {
   .universe-module-grid,
   .universe-recent-grid {
     grid-template-columns: 1fr;
+  }
+
+  .constellation-message-card--left,
+  .constellation-message-card--right {
+    justify-self: stretch;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
