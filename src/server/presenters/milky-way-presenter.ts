@@ -10,6 +10,9 @@ export function buildMilkyWayViewModel(
   const uploadTile = {
     title: 'Add to your Milky Way',
     description: 'Upload a photo, confirm the memory time, and optionally link it to an event.',
+  };
+
+  const uploadPanel = {
     defaultMemoryTime: '2026-03-27T10:30',
     eventLabel: 'Optional event',
     noteLabel: 'Optional note',
@@ -20,6 +23,7 @@ export function buildMilkyWayViewModel(
       title: 'Memory Milky Way',
       description: 'A time-led album for revisiting shared photos.',
       uploadTile,
+      uploadPanel,
       timeline: [],
       sections: [],
       emptyState: {
@@ -33,6 +37,7 @@ export function buildMilkyWayViewModel(
     title: 'Memory Milky Way',
     description: 'A time-led album for revisiting shared photos.',
     uploadTile,
+    uploadPanel,
     timeline: [
       {
         id: '2026-03',

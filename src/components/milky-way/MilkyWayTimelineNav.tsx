@@ -6,6 +6,10 @@ interface MilkyWayTimelineNavProps {
 }
 
 export function MilkyWayTimelineNav({ nodes }: MilkyWayTimelineNavProps) {
+  if (nodes.length === 0) {
+    return null;
+  }
+
   return (
     <nav className="milky-way-timeline-nav" aria-label="Milky Way months">
       <ol className="milky-way-timeline-list">

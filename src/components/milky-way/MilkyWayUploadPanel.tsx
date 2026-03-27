@@ -1,8 +1,8 @@
 import React from 'react';
-import type { MilkyWayUploadTileModel } from '@/types/milky-way';
+import type { MilkyWayUploadPanelModel } from '@/types/milky-way';
 
 interface MilkyWayUploadPanelProps {
-  model: MilkyWayUploadTileModel;
+  model: MilkyWayUploadPanelModel;
 }
 
 export function MilkyWayUploadPanel({ model }: MilkyWayUploadPanelProps) {

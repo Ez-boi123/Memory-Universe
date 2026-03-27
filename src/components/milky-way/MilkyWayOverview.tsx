@@ -22,7 +22,7 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
         </aside>
         <div className="milky-way-feed-region">
           <MilkyWayUploadTile model={model.uploadTile} />
-          <MilkyWayUploadPanel model={model.uploadTile} />
+          <MilkyWayUploadPanel model={model.uploadPanel} />
           {model.sections.length > 0 ? (
             model.sections.map((section) => (
               <section key={section.id} id={section.id}>

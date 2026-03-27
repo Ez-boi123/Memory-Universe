@@ -1,6 +1,9 @@
 export interface MilkyWayUploadTileModel {
   title: string;
   description: string;
+}
+
+export interface MilkyWayUploadPanelModel {
   defaultMemoryTime: string;
   eventLabel: string;
   noteLabel: string;
@@ -34,6 +37,7 @@ export interface MilkyWayPageModel {
   title: string;
   description: string;
   uploadTile: MilkyWayUploadTileModel;
+  uploadPanel: MilkyWayUploadPanelModel;
   timeline: MilkyWayTimelineNode[];
   sections: MilkyWaySectionModel[];
   emptyState: {
