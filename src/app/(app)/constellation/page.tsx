@@ -1,5 +1,8 @@
-import { MessageBoardPlaceholder } from '@/components/constellation/MessageBoardPlaceholder';
+import { ConstellationPage as ConstellationPageView } from '@/components/constellation/ConstellationPage';
+import { buildConstellationViewModel } from '@/server/presenters/constellation-presenter';
 
-export default function ConstellationPage() {
-  return <MessageBoardPlaceholder />;
+export default function Page() {
+  const model = buildConstellationViewModel();
+
+  return <ConstellationPageView model={model} />;
 }
