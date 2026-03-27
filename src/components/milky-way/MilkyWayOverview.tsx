@@ -1,5 +1,8 @@
 import React from 'react';
 import type { MilkyWayPageModel } from '@/types/milky-way';
+import { MilkyWayTimelineNav } from '@/components/milky-way/MilkyWayTimelineNav';
+import { MilkyWayUploadPanel } from '@/components/milky-way/MilkyWayUploadPanel';
+import { MilkyWayUploadTile } from '@/components/milky-way/MilkyWayUploadTile';
 
 interface MilkyWayOverviewProps {
   model: MilkyWayPageModel;
@@ -14,22 +17,12 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
         <p className="page-description">{model.description}</p>
       </header>
       <div className="milky-way-layout">
-        <aside className="milky-way-sidebar" aria-label="Milky Way timeline">
-          {model.timeline.length > 0 ? (
-            <ul>
-              {model.timeline.map((timelineNode) => (
-                <li key={timelineNode.id}>
-                  <span>{timelineNode.label}</span>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+        <aside className="milky-way-sidebar">
+          <MilkyWayTimelineNav nodes={model.timeline} />
         </aside>
         <div className="milky-way-feed-region">
-          <section className="milky-way-upload-tile">
-            <h2>{model.uploadTile.title}</h2>
-            <p>{model.uploadTile.description}</p>
-          </section>
+          <MilkyWayUploadTile model={model.uploadTile} />
+          <MilkyWayUploadPanel model={model.uploadTile} />
           {model.sections.length > 0 ? (
             model.sections.map((section) => (
               <section key={section.id} id={section.id}>
