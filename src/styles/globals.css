@@ -334,6 +334,105 @@ main {
   pointer-events: none;
 }
 
+.constellation-message-stream {
+  display: grid;
+  gap: 18px;
+}
+
+.constellation-message-card,
+.constellation-empty-state {
+  position: relative;
+  padding: 22px 24px;
+  border: 1px solid rgba(233, 226, 246, 0.12);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(17, 20, 40, 0.92), rgba(11, 13, 28, 0.9));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.constellation-message-card {
+  overflow: hidden;
+}
+
+.constellation-message-card::before,
+.constellation-empty-state::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 34%, rgba(255, 255, 255, 0.12), transparent 12%),
+    radial-gradient(circle at 68% 48%, rgba(173, 143, 255, 0.18), transparent 18%),
+    radial-gradient(circle at 78% 24%, rgba(255, 143, 214, 0.12), transparent 14%);
+  pointer-events: none;
+}
+
+.constellation-message-card > *,
+.constellation-empty-state > * {
+  position: relative;
+  z-index: 1;
+}
+
+.constellation-message-card--left {
+  justify-self: start;
+  max-width: min(560px, calc(100% - 72px));
+}
+
+.constellation-message-card--right {
+  justify-self: end;
+  max-width: min(560px, calc(100% - 72px));
+}
+
+.constellation-message-meta {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(201, 190, 224, 0.7);
+}
+
+.constellation-message-author {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.12;
+}
+
+.constellation-message-content {
+  margin: 12px 0 0;
+  color: rgba(236, 230, 248, 0.88);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.constellation-empty-state {
+  display: grid;
+  gap: 10px;
+}
+
+.constellation-empty-state h2,
+.constellation-empty-state p {
+  margin: 0;
+}
+
+.constellation-empty-state h2 {
+  font-size: 24px;
+  line-height: 1.12;
+}
+
+.constellation-empty-state p {
+  color: rgba(236, 230, 248, 0.82);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .constellation-message-card--left,
+  .constellation-message-card--right {
+    justify-self: stretch;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .universe-hero-aside {
   display: grid;
   align-content: start;
