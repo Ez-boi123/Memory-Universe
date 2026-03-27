@@ -32,7 +32,7 @@ export function buildConstellationViewModel(
 ): ConstellationPageViewModel {
   const messages = (args.messages ?? presentMockMessages())
     .slice()
-    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
     .map(toMessageCard);
 
   return {
