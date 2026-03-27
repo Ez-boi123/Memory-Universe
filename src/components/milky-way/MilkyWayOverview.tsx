@@ -1,5 +1,6 @@
 import React from 'react';
 import type { MilkyWayPageModel } from '@/types/milky-way';
+import { MilkyWayFeed } from '@/components/milky-way/MilkyWayFeed';
 import { MilkyWayTimelineNav } from '@/components/milky-way/MilkyWayTimelineNav';
 import { MilkyWayUploadPanel } from '@/components/milky-way/MilkyWayUploadPanel';
 import { MilkyWayUploadTile } from '@/components/milky-way/MilkyWayUploadTile';
@@ -23,13 +24,7 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
         <div className="milky-way-feed-region">
           <MilkyWayUploadTile model={model.uploadTile} />
           <MilkyWayUploadPanel model={model.uploadPanel} />
-          {model.sections.length > 0 ? (
-            model.sections.map((section) => (
-              <section key={section.id} id={section.id}>
-                <h2>{section.monthLabel}</h2>
-              </section>
-            ))
-          ) : null}
+          <MilkyWayFeed sections={model.sections} />
         </div>
       </div>
     </section>
