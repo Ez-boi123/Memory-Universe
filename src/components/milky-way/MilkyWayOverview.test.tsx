@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { MilkyWayOverview } from '@/components/milky-way/MilkyWayOverview';
 import { buildMilkyWayViewModel } from '@/server/presenters/milky-way-presenter';
@@ -19,8 +20,44 @@ describe('MilkyWayOverview', () => {
 
     expect(screen.getByRole('navigation', { name: 'Milky Way months' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Upload to Milky Way' })).toBeInTheDocument();
+    expect(screen.queryByLabelText('Memory time')).not.toBeInTheDocument();
+  });
+
+  it('reveals the upload form defaults after clicking the upload tile', async () => {
+    const user = userEvent.setup();
+
+    render(<MilkyWayOverview model={buildMilkyWayViewModel()} />);
+
+    await user.click(screen.getByRole('button', { name: 'Upload to Milky Way' }));
+
+    expect(screen.getByTestId('milky-way-upload-overlay')).toBeInTheDocument();
     expect(screen.getByLabelText('Memory time')).toHaveValue('2026-03-27T10:30');
     expect(screen.getByLabelText('Optional event')).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm Upload' })).toBeInTheDocument();
+  });
+
+  it('closes the upload dialog when the user clicks cancel', async () => {
+    const user = userEvent.setup();
+
+    render(<MilkyWayOverview model={buildMilkyWayViewModel()} />);
+
+    await user.click(screen.getByRole('button', { name: 'Upload to Milky Way' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByLabelText('Memory time')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('milky-way-upload-overlay')).not.toBeInTheDocument();
+  });
+
+  it('closes the upload dialog when the user clicks the overlay', async () => {
+    const user = userEvent.setup();
+
+    render(<MilkyWayOverview model={buildMilkyWayViewModel()} />);
+
+    await user.click(screen.getByRole('button', { name: 'Upload to Milky Way' }));
+    await user.click(screen.getByTestId('milky-way-upload-overlay'));
+
+    expect(screen.queryByLabelText('Memory time')).not.toBeInTheDocument();
   });
 
   it('renders the empty state copy when the feed has no sections', () => {

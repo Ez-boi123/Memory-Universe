@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import type { MilkyWayPageModel } from '@/types/milky-way';
 import { MilkyWayFeed } from '@/components/milky-way/MilkyWayFeed';
 import { MilkyWayTimelineNav } from '@/components/milky-way/MilkyWayTimelineNav';
@@ -11,6 +13,7 @@ interface MilkyWayOverviewProps {
 
 export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
   const hasTimeline = model.timeline.length > 0;
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   return (
     <section className="milky-way-page">
@@ -26,8 +29,34 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
           </aside>
         ) : null}
         <div className="milky-way-feed-region">
-          <MilkyWayUploadTile model={model.uploadTile} />
-          <MilkyWayUploadPanel model={model.uploadPanel} />
+          <MilkyWayUploadTile
+            isOpen={isUploadOpen}
+            model={model.uploadTile}
+            onToggle={() => setIsUploadOpen((current) => !current)}
+          />
+          {isUploadOpen ? (
+            <>
+              <button
+                aria-label="Close upload dialog"
+                className="milky-way-upload-overlay"
+                data-testid="milky-way-upload-overlay"
+                type="button"
+                onClick={() => setIsUploadOpen(false)}
+              />
+              <div
+                aria-modal="true"
+                className="milky-way-upload-dialog"
+                role="dialog"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <MilkyWayUploadPanel
+                  model={model.uploadPanel}
+                  onCancel={() => setIsUploadOpen(false)}
+                  onConfirm={() => setIsUploadOpen(false)}
+                />
+              </div>
+            </>
+          ) : null}
           {model.emptyState ? (
             <section className="milky-way-empty-state">
               <h2>{model.emptyState.title}</h2>
