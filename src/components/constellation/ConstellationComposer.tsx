@@ -12,6 +12,7 @@ interface ConstellationComposerProps {
 
 export function ConstellationComposer({ composer, isOpen, onClose }: ConstellationComposerProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -24,7 +25,11 @@ export function ConstellationComposer({ composer, isOpen, onClose }: Constellati
       return;
     }
 
-    dialog.focus();
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    } else {
+      dialog.focus();
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -37,21 +42,24 @@ export function ConstellationComposer({ composer, isOpen, onClose }: Constellati
         return;
       }
 
-      const focusableElements = dialog.querySelectorAll<HTMLElement>(
+      const interactiveElements = dialog.querySelectorAll<HTMLElement>(
         'button, textarea, input, select, a[href], [tabindex]:not([tabindex="-1"])'
       );
 
-      if (focusableElements.length === 0) {
+      if (interactiveElements.length === 0) {
         event.preventDefault();
         dialog.focus();
         return;
       }
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+      const firstElement = interactiveElements[0];
+      const lastElement = interactiveElements[interactiveElements.length - 1];
       const activeElement = document.activeElement;
 
-      if (event.shiftKey && activeElement === firstElement) {
+      if (!event.shiftKey && activeElement === dialog) {
+        event.preventDefault();
+        firstElement.focus();
+      } else if (event.shiftKey && (activeElement === firstElement || activeElement === dialog)) {
         event.preventDefault();
         lastElement.focus();
       } else if (!event.shiftKey && activeElement === lastElement) {
@@ -84,7 +92,11 @@ export function ConstellationComposer({ composer, isOpen, onClose }: Constellati
       >
         <h2>{composer.title}</h2>
         <p>{composer.helperText}</p>
-        <textarea maxLength={composer.maxLength} placeholder={composer.placeholder} />
+        <textarea
+          maxLength={composer.maxLength}
+          placeholder={composer.placeholder}
+          ref={textareaRef}
+        />
         <div className="constellation-composer-actions">
           <button onClick={onClose} type="button">
             {composer.cancelLabel}
