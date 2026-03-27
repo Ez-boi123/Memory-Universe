@@ -6,7 +6,7 @@ describe('buildMilkyWayViewModel', () => {
     const model = buildMilkyWayViewModel();
 
     expect(model.title).toBe('Memory Milky Way');
-    expect(model.uploadTile.defaultMemoryTime).toMatch(/^2026-/);
+    expect(model.uploadPanel.defaultMemoryTime).toMatch(/^2026-/);
     expect(model.timeline[0]).toMatchObject({
       label: '2026 / 03',
       sectionId: 'milky-way-section-2026-03',
