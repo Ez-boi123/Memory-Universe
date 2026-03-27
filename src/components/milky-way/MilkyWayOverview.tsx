@@ -15,16 +15,28 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
       </header>
       <div className="milky-way-layout">
         <aside className="milky-way-sidebar" aria-label="Milky Way timeline">
-          <span>{model.timeline[0]?.label}</span>
+          {model.timeline.length > 0 ? (
+            <ul>
+              {model.timeline.map((timelineNode) => (
+                <li key={timelineNode.id}>
+                  <span>{timelineNode.label}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </aside>
         <div className="milky-way-feed-region">
           <section className="milky-way-upload-tile">
             <h2>{model.uploadTile.title}</h2>
             <p>{model.uploadTile.description}</p>
           </section>
-          <section id={model.sections[0]?.id}>
-            <h2>{model.sections[0]?.monthLabel}</h2>
-          </section>
+          {model.sections.length > 0 ? (
+            model.sections.map((section) => (
+              <section key={section.id} id={section.id}>
+                <h2>{section.monthLabel}</h2>
+              </section>
+            ))
+          ) : null}
         </div>
       </div>
     </section>
