@@ -45,5 +45,8 @@ describe('ConstellationMessageStream', () => {
     );
 
     expect(screen.getByText('No stars yet')).toBeInTheDocument();
+    expect(
+      screen.getByText('Write the first note and let this shared sky begin with something small.')
+    ).toBeInTheDocument();
   });
 });
