@@ -578,6 +578,10 @@ main {
   align-items: start;
 }
 
+.milky-way-layout.is-empty {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .milky-way-sidebar {
   position: sticky;
   top: 112px;

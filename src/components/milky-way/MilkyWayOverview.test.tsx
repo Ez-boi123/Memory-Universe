@@ -24,11 +24,14 @@ describe('MilkyWayOverview', () => {
   });
 
   it('renders the empty state copy when the feed has no sections', () => {
-    render(<MilkyWayOverview model={buildMilkyWayViewModel({ isEmpty: true })} />);
+    const { container } = render(<MilkyWayOverview model={buildMilkyWayViewModel({ isEmpty: true })} />);
 
     expect(screen.getByText('Your Milky Way starts with one photo')).toBeInTheDocument();
     expect(
       screen.getByText('The first upload becomes the opening memory in your timeline.'),
     ).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: 'Milky Way months' })).not.toBeInTheDocument();
+    expect(screen.queryByText('March 2026')).not.toBeInTheDocument();
+    expect(container.querySelector('.milky-way-layout')).toHaveClass('is-empty');
   });
 });
