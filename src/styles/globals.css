@@ -542,6 +542,317 @@ main {
   gap: 24px;
 }
 
+.milky-way-page {
+  display: grid;
+  gap: 24px;
+}
+
+.milky-way-page-header {
+  padding: 32px 34px;
+  border: 1px solid rgba(232, 223, 241, 0.12);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top left, rgba(121, 108, 228, 0.14), transparent 26%),
+    linear-gradient(180deg, rgba(17, 20, 39, 0.94), rgba(12, 15, 31, 0.92));
+  box-shadow: 0 24px 72px rgba(1, 4, 15, 0.28);
+}
+
+.milky-way-page-header .page-eyebrow,
+.milky-way-page-header .page-title,
+.milky-way-page-header .page-description {
+  color: #f7f2ff;
+}
+
+.milky-way-page-header .page-eyebrow {
+  color: rgba(234, 225, 255, 0.74);
+}
+
+.milky-way-page-header .page-description {
+  color: rgba(235, 228, 248, 0.78);
+}
+
+.milky-way-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.milky-way-sidebar {
+  position: sticky;
+  top: 112px;
+}
+
+.milky-way-timeline-nav {
+  padding: 20px 18px;
+  border: 1px solid rgba(231, 223, 241, 0.12);
+  border-radius: 24px;
+  background: rgba(15, 18, 34, 0.76);
+  box-shadow: 0 16px 48px rgba(1, 4, 15, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.milky-way-timeline-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.milky-way-timeline-link {
+  display: block;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  color: rgba(231, 224, 244, 0.72);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.milky-way-timeline-link.is-active {
+  border-color: rgba(199, 185, 255, 0.24);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04));
+  color: #f8f3ff;
+}
+
+.milky-way-feed-region {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.milky-way-upload-tile,
+.milky-way-upload-panel,
+.milky-way-feed,
+.milky-way-empty-state {
+  border: 1px solid rgba(230, 221, 239, 0.12);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(17, 20, 38, 0.94), rgba(11, 14, 29, 0.92)),
+    rgba(14, 16, 32, 0.94);
+  box-shadow: 0 24px 64px rgba(1, 4, 15, 0.24);
+}
+
+.milky-way-upload-tile {
+  display: grid;
+  gap: 16px;
+  padding: 22px 24px;
+}
+
+.milky-way-upload-tile p {
+  margin: 0;
+  max-width: 60ch;
+  color: rgba(233, 226, 247, 0.76);
+  line-height: 1.7;
+}
+
+.milky-way-upload-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f8f4ff;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.milky-way-upload-plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(233, 224, 255, 0.18);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    0 14px 30px rgba(4, 7, 18, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.milky-way-upload-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.milky-way-upload-panel label {
+  display: grid;
+  gap: 8px;
+  color: rgba(239, 233, 248, 0.88);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.milky-way-upload-panel label:last-child {
+  grid-column: 1 / -1;
+}
+
+.milky-way-upload-panel input,
+.milky-way-upload-panel textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(222, 213, 240, 0.16);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8f4ff;
+  font: inherit;
+}
+
+.milky-way-upload-panel input::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(245, 239, 255, 0.14);
+  color: #f7f2ff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.milky-way-upload-panel textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+.milky-way-feed {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.milky-way-month-section {
+  display: grid;
+  gap: 16px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgba(229, 220, 239, 0.08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.milky-way-month-title {
+  margin: 0;
+  color: #f8f3ff;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.milky-way-entry-list {
+  display: grid;
+  gap: 16px;
+}
+
+.milky-way-entry {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(227, 219, 239, 0.08);
+}
+
+.milky-way-entry:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.milky-way-entry-date {
+  margin: 0;
+  color: rgba(229, 222, 242, 0.68);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.milky-way-entry-note {
+  margin: 0;
+  max-width: 58ch;
+  color: rgba(236, 229, 247, 0.8);
+  line-height: 1.7;
+}
+
+.milky-way-photo-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.milky-way-photo-grid.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.milky-way-photo-grid.is-multi {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.milky-way-photo-card {
+  min-height: 176px;
+  border: 1px solid rgba(244, 237, 255, 0.12);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 14px 36px rgba(3, 6, 18, 0.24);
+}
+
+.milky-way-photo-card.is-violet {
+  background:
+    radial-gradient(circle at 24% 28%, rgba(255, 255, 255, 0.78), transparent 10%),
+    linear-gradient(135deg, rgba(134, 93, 255, 0.88), rgba(46, 40, 96, 0.96));
+}
+
+.milky-way-photo-card.is-blue {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.74), transparent 12%),
+    linear-gradient(135deg, rgba(88, 143, 255, 0.84), rgba(32, 63, 118, 0.96));
+}
+
+.milky-way-photo-card.is-rose {
+  background:
+    radial-gradient(circle at 34% 24%, rgba(255, 239, 246, 0.82), transparent 12%),
+    linear-gradient(135deg, rgba(232, 121, 170, 0.82), rgba(110, 45, 78, 0.96));
+}
+
+.milky-way-empty-state {
+  display: grid;
+  gap: 12px;
+  padding: 34px 28px;
+  place-items: center;
+  text-align: center;
+}
+
+.milky-way-empty-state h2,
+.milky-way-empty-state p {
+  margin: 0;
+}
+
+.milky-way-empty-state h2 {
+  max-width: 16ch;
+  color: #f8f3ff;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+}
+
+.milky-way-empty-state p {
+  max-width: 48ch;
+  color: rgba(234, 227, 246, 0.78);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
 @media (max-width: 760px) {
   .module-page-layout {
     gap: 18px;
@@ -559,6 +870,42 @@ main {
 
   .placeholder-page-card {
     padding: 24px;
+  }
+
+  .milky-way-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .milky-way-sidebar {
+    position: static;
+  }
+
+  .milky-way-page-header,
+  .milky-way-upload-tile,
+  .milky-way-upload-panel,
+  .milky-way-feed,
+  .milky-way-empty-state {
+    padding: 22px;
+  }
+
+  .milky-way-timeline-list {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .milky-way-upload-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .milky-way-upload-panel label:last-child {
+    grid-column: auto;
+  }
+
+  .milky-way-month-section {
+    padding: 18px;
+  }
+
+  .milky-way-photo-grid.is-multi {
+    grid-template-columns: 1fr;
   }
 }
 

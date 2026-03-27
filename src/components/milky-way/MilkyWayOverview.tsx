@@ -24,7 +24,14 @@ export function MilkyWayOverview({ model }: MilkyWayOverviewProps) {
         <div className="milky-way-feed-region">
           <MilkyWayUploadTile model={model.uploadTile} />
           <MilkyWayUploadPanel model={model.uploadPanel} />
-          <MilkyWayFeed sections={model.sections} />
+          {model.emptyState ? (
+            <section className="milky-way-empty-state">
+              <h2>{model.emptyState.title}</h2>
+              <p>{model.emptyState.description}</p>
+            </section>
+          ) : (
+            <MilkyWayFeed sections={model.sections} />
+          )}
         </div>
       </div>
     </section>

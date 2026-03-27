@@ -22,4 +22,13 @@ describe('MilkyWayOverview', () => {
     expect(screen.getByLabelText('Memory time')).toHaveValue('2026-03-27T10:30');
     expect(screen.getByLabelText('Optional event')).toHaveValue('');
   });
+
+  it('renders the empty state copy when the feed has no sections', () => {
+    render(<MilkyWayOverview model={buildMilkyWayViewModel({ isEmpty: true })} />);
+
+    expect(screen.getByText('Your Milky Way starts with one photo')).toBeInTheDocument();
+    expect(
+      screen.getByText('The first upload becomes the opening memory in your timeline.'),
+    ).toBeInTheDocument();
+  });
 });
