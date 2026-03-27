@@ -18,4 +18,21 @@ describe('MilkyWayEntry', () => {
     expect(screen.getByText('February 9, 2026')).toBeInTheDocument();
     expect(screen.queryByTestId('milky-way-entry-note')).not.toBeInTheDocument();
   });
+
+  it('renders the note block when note is present', () => {
+    render(
+      <MilkyWayEntry
+        entry={{
+          id: 'entry-2',
+          dateLabel: 'February 10, 2026',
+          note: 'A quiet evening on the platform.',
+          photos: [{ id: 'photo-2', alt: 'Platform lights', accent: 'rose' }],
+        }}
+      />,
+    );
+
+    expect(screen.getByTestId('milky-way-entry-note')).toHaveTextContent(
+      'A quiet evening on the platform.',
+    );
+  });
 });

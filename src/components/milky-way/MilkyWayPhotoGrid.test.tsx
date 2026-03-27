@@ -10,7 +10,7 @@ describe('MilkyWayPhotoGrid', () => {
     );
 
     expect(container.firstChild).toHaveClass('milky-way-photo-grid', 'is-single');
-    expect(screen.getByLabelText('Skyline')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Skyline' })).toBeInTheDocument();
 
     rerender(
       <MilkyWayPhotoGrid
@@ -22,5 +22,6 @@ describe('MilkyWayPhotoGrid', () => {
     );
 
     expect(container.firstChild).toHaveClass('milky-way-photo-grid', 'is-multi');
+    expect(screen.getByRole('img', { name: 'Reflection' })).toBeInTheDocument();
   });
 });

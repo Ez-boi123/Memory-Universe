@@ -1,11 +1,8 @@
 import React from 'react';
+import type { MilkyWayPhotoModel } from '@/types/milky-way';
 
 interface MilkyWayPhotoGridProps {
-  photos: Array<{
-    id: string;
-    alt: string;
-    accent: 'violet' | 'blue' | 'rose';
-  }>;
+  photos: MilkyWayPhotoModel[];
 }
 
 export function MilkyWayPhotoGrid({ photos }: MilkyWayPhotoGridProps) {
@@ -17,8 +14,9 @@ export function MilkyWayPhotoGrid({ photos }: MilkyWayPhotoGridProps) {
       {photos.map((photo) => (
         <div
           key={photo.id}
-          aria-label={photo.alt}
           className={`milky-way-photo-card is-${photo.accent}`}
+          role="img"
+          aria-label={photo.alt}
         />
       ))}
     </div>

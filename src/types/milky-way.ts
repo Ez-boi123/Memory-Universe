@@ -13,11 +13,13 @@ export interface MilkyWayEntryModel {
   id: string;
   dateLabel: string;
   note?: string;
-  photos: Array<{
-    id: string;
-    alt: string;
-    accent: 'violet' | 'blue' | 'rose';
-  }>;
+  photos: MilkyWayPhotoModel[];
+}
+
+export interface MilkyWayPhotoModel {
+  id: string;
+  alt: string;
+  accent: 'violet' | 'blue' | 'rose';
 }
 
 export interface MilkyWaySectionModel {
