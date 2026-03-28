@@ -23,4 +23,17 @@ describe('PlanetPage', () => {
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('opens the matching modal when an initial event id is provided', () => {
+    render(
+      <PlanetPage
+        initialEventId="event-placeholder-2"
+        model={buildPlanetPageViewModel()}
+      />,
+    );
+
+    expect(
+      screen.getByRole('dialog', { name: /second shared memory placeholder/i }),
+    ).toBeInTheDocument();
+  });
 });
