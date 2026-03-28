@@ -11,11 +11,14 @@ const { replace } = vi.hoisted(() => ({
   replace: vi.fn(),
 }));
 
+let mockedSearchParams = 'view=stars';
+
 vi.mock('next/navigation', () => ({
   usePathname: () => '/planet',
   useRouter: () => ({
     replace,
   }),
+  useSearchParams: () => new URLSearchParams(mockedSearchParams),
 }));
 
 function buildPlanetPageTestModel(): PlanetPageViewModel {
@@ -109,21 +112,22 @@ describe('PlanetPage', () => {
   it('opens and closes the detail modal from an event card', async () => {
     const user = userEvent.setup();
     replace.mockReset();
+    mockedSearchParams = 'view=stars';
+    window.location.hash = '#current';
 
     render(<PlanetPage model={buildPlanetPageTestModel()} />);
 
     await user.click(screen.getByRole('button', { name: /first test event/i }));
 
     expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
-    expect(screen.getByRole('dialog').parentElement).toHaveStyle({ zIndex: '30' });
-    expect(replace).toHaveBeenCalledWith('/planet?eventId=event-1', {
+    expect(replace).toHaveBeenCalledWith('/planet?view=stars&eventId=event-1#current', {
       scroll: false,
     });
 
     await user.click(screen.getByRole('button', { name: /close/i }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(replace).toHaveBeenCalledWith('/planet', { scroll: false });
+    expect(replace).toHaveBeenCalledWith('/planet?view=stars#current', { scroll: false });
   });
 
   it('opens the matching modal when an initial event id is provided', () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ModulePageHeader } from '@/components/universe/ModulePageHeader';
 import type { PlanetPageViewModel } from '@/types/planet';
@@ -36,6 +36,7 @@ const modalStyle: React.CSSProperties = {
 export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedEventId, setSelectedEventId] = useState<string | null>(initialEventId);
 
   useEffect(() => {
@@ -47,20 +48,35 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
     setSelectedEventId(null);
   }, [initialEventId, model.eventDetails]);
 
+  function buildPlanetUrl(nextEventId: string | null) {
+    const params = new URLSearchParams(searchParams?.toString());
+
+    if (nextEventId) {
+      params.set('eventId', nextEventId);
+    } else {
+      params.delete('eventId');
+    }
+
+    const query = params.toString();
+    const hash = typeof window !== 'undefined' ? window.location.hash : '';
+
+    return `${pathname}${query ? `?${query}` : ''}${hash}`;
+  }
+
   function handleOpen(eventId: string) {
     if (!model.eventDetails[eventId]) {
       return;
     }
 
     setSelectedEventId(eventId);
-    router.replace(`${pathname}?eventId=${encodeURIComponent(eventId)}`, {
+    router.replace(buildPlanetUrl(eventId), {
       scroll: false,
     });
   }
 
   function handleClose() {
     setSelectedEventId(null);
-    router.replace(pathname, { scroll: false });
+    router.replace(buildPlanetUrl(null), { scroll: false });
   }
 
   const selectedEvent = selectedEventId ? model.eventDetails[selectedEventId] : null;

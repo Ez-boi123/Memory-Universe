@@ -21,4 +21,18 @@ describe('ModulePageHeader', () => {
     expect(screen.getByText('New Event')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'New Event' })).toBeNull();
   });
+
+  it('renders a provided action node instead of the plain action label branch', () => {
+    render(
+      <ModulePageHeader
+        action={<button type="button">Open Modal</button>}
+        description="Structured shared memory events."
+        eyebrow="Planet"
+        title="Memory Planet"
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Open Modal' })).toBeInTheDocument();
+    expect(screen.queryByText('New Event')).toBeNull();
+  });
 });
