@@ -1,12 +1,20 @@
 import React from 'react';
 
-interface ModulePageHeaderProps {
+interface ModulePageHeaderBaseProps {
   eyebrow: string;
   title: string;
   description: string;
-  actionLabel?: string;
-  action?: React.ReactNode;
 }
+
+type ModulePageHeaderProps =
+  | (ModulePageHeaderBaseProps & {
+      actionLabel: string;
+      action?: never;
+    })
+  | (ModulePageHeaderBaseProps & {
+      action: React.ReactNode;
+      actionLabel?: never;
+    });
 
 export function ModulePageHeader({
   eyebrow,
@@ -22,8 +30,7 @@ export function ModulePageHeader({
         <h1 className="page-title">{title}</h1>
         <p className="page-description">{description}</p>
       </div>
-      {action ? <div className="module-page-action">{action}</div> : null}
-      {!action && actionLabel ? <div className="module-page-action">{actionLabel}</div> : null}
+      <div className="module-page-action">{action ?? actionLabel}</div>
     </section>
   );
 }

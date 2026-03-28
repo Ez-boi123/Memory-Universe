@@ -68,7 +68,13 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
     <div className="planet-page">
       <ModulePageHeader
         action={
-          <button className="planet-page-primary-action" type="button">
+          <button
+            aria-disabled="true"
+            className="planet-page-primary-action"
+            disabled
+            title="New Event creation is implemented in the next task."
+            type="button"
+          >
             {model.header.actionLabel}
           </button>
         }

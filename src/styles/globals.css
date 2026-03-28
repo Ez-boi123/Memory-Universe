@@ -508,16 +508,8 @@ main {
 
 .module-page-action {
   align-self: end;
-  padding: 12px 18px;
-  border: 1px solid rgba(65, 86, 107, 0.18);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #fffdf9, #f1e8dc);
-  color: var(--accent-strong);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: default;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .planet-page {
@@ -701,6 +693,11 @@ main {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.planet-page-primary-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .placeholder-page-card {
