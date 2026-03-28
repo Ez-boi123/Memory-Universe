@@ -115,6 +115,7 @@ describe('PlanetPage', () => {
     await user.click(screen.getByRole('button', { name: /first test event/i }));
 
     expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
+    expect(screen.getByRole('dialog').parentElement).toHaveStyle({ zIndex: '30' });
     expect(replace).toHaveBeenCalledWith('/planet?eventId=event-1', {
       scroll: false,
     });

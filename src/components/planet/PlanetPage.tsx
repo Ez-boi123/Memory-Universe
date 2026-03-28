@@ -16,6 +16,7 @@ interface PlanetPageProps {
 const modalBackdropStyle: React.CSSProperties = {
   position: 'fixed',
   inset: 0,
+  zIndex: 30,
   display: 'grid',
   placeItems: 'center',
   padding: '16px',
