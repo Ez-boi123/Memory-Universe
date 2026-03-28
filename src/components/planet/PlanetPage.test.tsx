@@ -1,11 +1,22 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { buildPlanetPageViewModel } from '@/server/presenters/planet-presenter';
 
 import { PlanetPage } from './PlanetPage';
+
+const { replace } = vi.hoisted(() => ({
+  replace: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/planet',
+  useRouter: () => ({
+    replace,
+  }),
+}));
 
 describe('PlanetPage', () => {
   it('opens and closes the detail modal from an event card', async () => {
@@ -18,10 +29,14 @@ describe('PlanetPage', () => {
     expect(
       screen.getByRole('dialog', { name: /first shared memory placeholder/i }),
     ).toBeInTheDocument();
+    expect(replace).toHaveBeenCalledWith('/planet?eventId=event-placeholder-1', {
+      scroll: false,
+    });
 
     await user.click(screen.getByRole('button', { name: /close/i }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(replace).toHaveBeenCalledWith('/planet', { scroll: false });
   });
 
   it('opens the matching modal when an initial event id is provided', () => {

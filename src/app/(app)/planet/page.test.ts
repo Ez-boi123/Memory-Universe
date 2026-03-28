@@ -1,12 +1,24 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 
 const { mockModel } = vi.hoisted(() => ({
   mockModel: { source: 'mock-model' },
 }));
 
 vi.mock('@/components/planet/PlanetPage', () => ({
-  PlanetPage: () => null,
+  PlanetPage: ({
+    initialEventId,
+    model,
+  }: {
+    initialEventId: string | null;
+    model: { source: string };
+  }) =>
+    React.createElement(
+      'div',
+      { 'data-testid': 'planet-page-route-probe' },
+      `${initialEventId ?? 'none'}:${model.source}`,
+    ),
 }));
 
 vi.mock('@/server/presenters/planet-presenter', () => ({
@@ -38,9 +50,10 @@ describe('PlanetPageRoute', () => {
     });
 
     expect(React.isValidElement(element)).toBe(true);
-    expect(element.props).toEqual({
-      initialEventId: 'event-1',
-      model: mockModel,
-    });
+    render(element);
+
+    expect(screen.getByTestId('planet-page-route-probe')).toHaveTextContent(
+      'event-1:mock-model',
+    );
   });
 });

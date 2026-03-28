@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 import type { PlanetPageViewModel } from '@/types/planet';
 
@@ -29,18 +30,32 @@ const modalStyle: React.CSSProperties = {
 };
 
 export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
+  const pathname = usePathname();
+  const router = useRouter();
   const [selectedEventId, setSelectedEventId] = useState<string | null>(initialEventId);
 
   useEffect(() => {
     setSelectedEventId(initialEventId);
   }, [initialEventId]);
 
+  function handleOpen(eventId: string) {
+    setSelectedEventId(eventId);
+    router.replace(`${pathname}?eventId=${encodeURIComponent(eventId)}`, {
+      scroll: false,
+    });
+  }
+
+  function handleClose() {
+    setSelectedEventId(null);
+    router.replace(pathname, { scroll: false });
+  }
+
   const selectedEvent = selectedEventId ? model.eventDetails[selectedEventId] : null;
 
   return (
     <div>
       {model.events.map((event) => (
-        <button key={event.id} onClick={() => setSelectedEventId(event.id)} type="button">
+        <button key={event.id} onClick={() => handleOpen(event.id)} type="button">
           {event.title}
         </button>
       ))}
@@ -48,7 +63,7 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
       {selectedEvent ? (
         <div style={modalBackdropStyle}>
           <div aria-label={selectedEvent.title} aria-modal="true" role="dialog" style={modalStyle}>
-            <button aria-label="Close" onClick={() => setSelectedEventId(null)} type="button">
+            <button aria-label="Close" onClick={handleClose} type="button">
               Close
             </button>
             <h2>{selectedEvent.title}</h2>
