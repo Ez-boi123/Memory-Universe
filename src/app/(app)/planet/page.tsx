@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { PlanetPage } from '@/components/planet/PlanetPage';
 import { buildPlanetPageViewModel } from '@/server/presenters/planet-presenter';
 
