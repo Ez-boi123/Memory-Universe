@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { ConstellationHero } from './ConstellationHero';
 
 describe('ConstellationHero', () => {
-  it('renders the constellation heading and lead copy over the hero stage', () => {
+  it('renders the constellation heading, lead copy, and hero cluster layer hook', () => {
     render(
       <ConstellationHero
         hero={{
@@ -21,5 +21,6 @@ describe('ConstellationHero', () => {
     expect(screen.getByText('Constellation')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Memory Constellation' })).toBeInTheDocument();
     expect(screen.getByText(/shared sky/i)).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-hero-cluster-layer')).toBeInTheDocument();
   });
 });

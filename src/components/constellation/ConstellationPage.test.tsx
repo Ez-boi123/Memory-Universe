@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { ConstellationPage } from './ConstellationPage';
 
 describe('ConstellationPage', () => {
-  it('renders the floating action and wires the composer open/close flow', async () => {
+  it('renders the full-page veil layers alongside the page content and composer flow', async () => {
     const user = userEvent.setup();
 
     render(
@@ -38,6 +38,15 @@ describe('ConstellationPage', () => {
         }}
       />
     );
+
+    expect(screen.getByTestId('constellation-page-veil')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-veil-arcs')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-veil-clusters')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-stardust-haze-hook')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-stardust-sparkle-hook')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-stardust-glow-hook')).toBeInTheDocument();
+    expect(screen.getByTestId('constellation-page-stardust-needle-hook')).toBeInTheDocument();
+    expect(screen.getByText('Memory Constellation')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Write a new constellation message' }));
     expect(screen.getByRole('dialog', { name: 'Write Into Your Shared Sky' })).toBeInTheDocument();
