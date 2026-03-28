@@ -8,5 +8,5 @@ interface EventDetailPageProps {
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { eventId } = await params;
-  redirect(`/planet?eventId=${eventId}`);
+  redirect(`/planet?eventId=${encodeURIComponent(eventId)}`);
 }

@@ -1,10 +1,24 @@
 import { PlanetPage } from '@/components/planet/PlanetPage';
 import { buildPlanetPageViewModel } from '@/server/presenters/planet-presenter';
 
+type PlanetEventIdParam = string | string[] | undefined;
+
 interface PlanetPageRouteProps {
   searchParams?: Promise<{
-    eventId?: string;
+    eventId?: PlanetEventIdParam;
   }>;
+}
+
+export function normalizePlanetEventIdParam(eventId: PlanetEventIdParam): string | null {
+  if (typeof eventId === 'string') {
+    return eventId;
+  }
+
+  if (Array.isArray(eventId)) {
+    return eventId[0] ?? null;
+  }
+
+  return null;
 }
 
 export default async function PlanetPageRoute({ searchParams }: PlanetPageRouteProps) {
@@ -12,7 +26,7 @@ export default async function PlanetPageRoute({ searchParams }: PlanetPageRouteP
 
   return (
     <PlanetPage
-      initialEventId={resolvedSearchParams?.eventId ?? null}
+      initialEventId={normalizePlanetEventIdParam(resolvedSearchParams?.eventId)}
       model={buildPlanetPageViewModel()}
     />
   );

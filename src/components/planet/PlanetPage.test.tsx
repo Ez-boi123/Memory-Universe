@@ -36,4 +36,28 @@ describe('PlanetPage', () => {
       screen.getByRole('dialog', { name: /second shared memory placeholder/i }),
     ).toBeInTheDocument();
   });
+
+  it('syncs the open modal when the event id prop changes', () => {
+    const { rerender } = render(
+      <PlanetPage
+        initialEventId="event-placeholder-1"
+        model={buildPlanetPageViewModel()}
+      />,
+    );
+
+    expect(
+      screen.getByRole('dialog', { name: /first shared memory placeholder/i }),
+    ).toBeInTheDocument();
+
+    rerender(
+      <PlanetPage
+        initialEventId="event-placeholder-3"
+        model={buildPlanetPageViewModel()}
+      />,
+    );
+
+    expect(
+      screen.getByRole('dialog', { name: /third shared memory placeholder/i }),
+    ).toBeInTheDocument();
+  });
 });

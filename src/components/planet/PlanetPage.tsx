@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import type { PlanetPageViewModel } from '@/types/planet';
 
@@ -30,6 +30,11 @@ const modalStyle: React.CSSProperties = {
 
 export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(initialEventId);
+
+  useEffect(() => {
+    setSelectedEventId(initialEventId);
+  }, [initialEventId]);
+
   const selectedEvent = selectedEventId ? model.eventDetails[selectedEventId] : null;
 
   return (
