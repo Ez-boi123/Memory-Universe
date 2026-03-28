@@ -15,4 +15,10 @@ describe('AppTopNavigation', () => {
     expect(screen.getByRole('link', { name: 'Constellation' })).toHaveAttribute('href', '/constellation');
     expect(screen.getByRole('link', { name: 'Profile' })).toHaveAttribute('href', '/settings/account');
   });
+
+  it('shows the current user display name next to the profile icon', () => {
+    render(<AppTopNavigation displayName="Alice Example" />);
+
+    expect(screen.getByText('Alice Example')).toBeInTheDocument();
+  });
 });

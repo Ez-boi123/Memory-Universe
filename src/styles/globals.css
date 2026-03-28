@@ -106,6 +106,27 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  min-height: 40px;
+  transform: translateY(-50%);
+}
+
+.app-top-nav-profile-name {
+  display: inline-block;
+  max-width: 180px;
+  overflow: hidden;
+  color: rgba(244, 238, 255, 0.94);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-top-nav-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   border: 1px solid rgba(232, 222, 255, 0.16);
@@ -114,12 +135,12 @@ main {
   box-shadow:
     0 10px 22px rgba(2, 4, 14, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transform: translateY(-50%);
 }
 
 .app-top-nav-profile-icon {
   width: 22px;
   height: 22px;
+  flex: 0 0 auto;
 }
 
 @media (max-width: 760px) {
@@ -143,6 +164,10 @@ main {
     position: static;
     right: auto;
     transform: none;
+  }
+
+  .app-top-nav-profile-name {
+    max-width: 120px;
   }
 
   .app-top-nav-links {
