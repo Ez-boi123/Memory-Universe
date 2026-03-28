@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { PlanetPageViewModel } from '@/types/planet';
 
@@ -93,6 +93,12 @@ function buildPlanetPageTestModel(): PlanetPageViewModel {
 }
 
 describe('PlanetPage', () => {
+  beforeEach(() => {
+    replace.mockReset();
+    mockedSearchParams = 'view=stars';
+    window.location.hash = '';
+  });
+
   it('renders orbital event units in alternating layout order', () => {
     render(<PlanetPage model={buildPlanetPageTestModel()} />);
 
@@ -111,8 +117,6 @@ describe('PlanetPage', () => {
 
   it('opens and closes the detail modal from an event card', async () => {
     const user = userEvent.setup();
-    replace.mockReset();
-    mockedSearchParams = 'view=stars';
     window.location.hash = '#current';
 
     render(<PlanetPage model={buildPlanetPageTestModel()} />);

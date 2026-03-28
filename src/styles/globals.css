@@ -502,8 +502,27 @@ main {
   box-shadow: 0 18px 48px rgba(54, 46, 36, 0.08);
 }
 
-.module-page-header .page-description {
+.module-page-eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.module-page-title {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.05;
+}
+
+.module-page-description {
+  margin: 16px 0 0;
   max-width: 60ch;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 .module-page-action {
@@ -698,6 +717,26 @@ main {
 .planet-page-primary-action:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.planet-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(4, 6, 16, 0.7);
+}
+
+.planet-modal {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(14, 16, 33, 0.96);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
 }
 
 .planet-page-empty-state {

@@ -26,9 +26,9 @@ export function ModulePageHeader({
   return (
     <section className="module-page-header">
       <div>
-        <p className="page-eyebrow">{eyebrow}</p>
-        <h1 className="page-title">{title}</h1>
-        <p className="page-description">{description}</p>
+        <p className="module-page-eyebrow">{eyebrow}</p>
+        <h1 className="module-page-title">{title}</h1>
+        <p className="module-page-description">{description}</p>
       </div>
       <div className="module-page-action">{action ?? actionLabel}</div>
     </section>

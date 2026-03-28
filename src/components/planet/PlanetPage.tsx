@@ -13,26 +13,6 @@ interface PlanetPageProps {
   initialEventId?: string | null;
 }
 
-const modalBackdropStyle: React.CSSProperties = {
-  position: 'fixed',
-  inset: 0,
-  zIndex: 30,
-  display: 'grid',
-  placeItems: 'center',
-  padding: '16px',
-  background: 'rgba(4, 6, 16, 0.7)',
-};
-
-const modalStyle: React.CSSProperties = {
-  width: 'min(720px, 100%)',
-  maxHeight: 'calc(100vh - 32px)',
-  overflow: 'auto',
-  padding: '24px',
-  borderRadius: '24px',
-  background: 'rgba(14, 16, 33, 0.96)',
-  boxShadow: '0 24px 80px rgba(0, 0, 0, 0.35)',
-};
-
 export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -118,8 +98,13 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
       )}
 
       {selectedEvent ? (
-        <div style={modalBackdropStyle}>
-          <div aria-label={selectedEvent.title} aria-modal="true" role="dialog" style={modalStyle}>
+        <div className="planet-modal-backdrop">
+          <div
+            aria-label={selectedEvent.title}
+            aria-modal="true"
+            className="planet-modal"
+            role="dialog"
+          >
             <button aria-label="Close" onClick={handleClose} type="button">
               Close
             </button>
