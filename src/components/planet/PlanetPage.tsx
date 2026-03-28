@@ -18,15 +18,16 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedEventId, setSelectedEventId] = useState<string | null>(initialEventId);
+  const initialEventDetail = initialEventId ? model.eventDetails[initialEventId] : null;
 
   useEffect(() => {
-    if (!initialEventId || model.eventDetails[initialEventId]) {
+    if (!initialEventId || initialEventDetail) {
       setSelectedEventId(initialEventId);
       return;
     }
 
     setSelectedEventId(null);
-  }, [initialEventId]);
+  }, [initialEventDetail, initialEventId]);
 
   function buildPlanetUrl(nextEventId: string | null) {
     const params = new URLSearchParams(searchParams?.toString());

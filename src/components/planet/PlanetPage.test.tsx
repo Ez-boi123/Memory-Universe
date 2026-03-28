@@ -165,6 +165,25 @@ describe('PlanetPage', () => {
     expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
   });
 
+  it('opens the requested modal when detail data for the same initial event id appears later', () => {
+    const initialModel = buildPlanetPageTestModel();
+    const delayedDetailModel = {
+      ...buildPlanetPageTestModel(),
+      eventDetails: {
+        'event-2': buildPlanetPageTestModel().eventDetails['event-2'],
+      },
+    };
+    const { rerender } = render(
+      <PlanetPage initialEventId="event-1" model={delayedDetailModel} />,
+    );
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    rerender(<PlanetPage initialEventId="event-1" model={initialModel} />);
+
+    expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
+  });
+
   it('does not navigate or open a modal when detail data is missing', async () => {
     const user = userEvent.setup();
     replace.mockReset();
