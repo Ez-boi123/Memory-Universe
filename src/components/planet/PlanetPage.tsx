@@ -3,7 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
+import { ModulePageHeader } from '@/components/universe/ModulePageHeader';
 import type { PlanetPageViewModel } from '@/types/planet';
+
+import { PlanetArchive } from './PlanetArchive';
 
 interface PlanetPageProps {
   model: PlanetPageViewModel;
@@ -62,12 +65,14 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const selectedEvent = selectedEventId ? model.eventDetails[selectedEventId] : null;
 
   return (
-    <div>
-      {model.events.map((event) => (
-        <button key={event.id} onClick={() => handleOpen(event.id)} type="button">
-          {event.title}
-        </button>
-      ))}
+    <div className="planet-page">
+      <ModulePageHeader
+        actionLabel={model.header.actionLabel}
+        description={model.header.description}
+        eyebrow={model.header.eyebrow}
+        title={model.header.title}
+      />
+      <PlanetArchive events={model.events} onOpen={handleOpen} />
 
       {selectedEvent ? (
         <div style={modalBackdropStyle}>

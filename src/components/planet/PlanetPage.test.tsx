@@ -90,6 +90,21 @@ function buildPlanetPageTestModel(): PlanetPageViewModel {
 }
 
 describe('PlanetPage', () => {
+  it('renders orbital event units in alternating layout order', () => {
+    render(<PlanetPage model={buildPlanetPageTestModel()} />);
+
+    expect(screen.getByText('Memory Planet')).toBeInTheDocument();
+    expect(screen.getByText(/test description/i)).toBeInTheDocument();
+    expect(screen.getByTestId('planet-event-event-1')).toHaveAttribute(
+      'data-layout-side',
+      'left',
+    );
+    expect(screen.getByTestId('planet-event-event-2')).toHaveAttribute(
+      'data-layout-side',
+      'right',
+    );
+  });
+
   it('opens and closes the detail modal from an event card', async () => {
     const user = userEvent.setup();
     replace.mockReset();

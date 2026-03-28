@@ -520,6 +520,169 @@ main {
   cursor: default;
 }
 
+.planet-page {
+  display: grid;
+  gap: 24px;
+}
+
+.planet-archive {
+  position: relative;
+  display: grid;
+  gap: 28px;
+}
+
+.planet-archive::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  left: 110px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(233, 226, 246, 0),
+    rgba(233, 226, 246, 0.18) 10%,
+    rgba(233, 226, 246, 0.18) 90%,
+    rgba(233, 226, 246, 0)
+  );
+  pointer-events: none;
+}
+
+.planet-event-card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 28px;
+  border: 1px solid rgba(233, 226, 246, 0.12);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(116, 96, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, rgba(14, 16, 33, 0.92), rgba(10, 12, 25, 0.88));
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.24);
+  color: #f7f3ff;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.planet-event-card:hover,
+.planet-event-card:focus-visible {
+  border-color: rgba(233, 226, 246, 0.22);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+  transform: translateY(-2px);
+}
+
+.planet-event-card:focus-visible {
+  outline: 2px solid rgba(245, 238, 255, 0.72);
+  outline-offset: 3px;
+}
+
+.planet-event-card[data-layout-side='right'] {
+  grid-template-columns: minmax(0, 1fr) 220px;
+}
+
+.planet-event-card[data-layout-side='right'] .planet-event-card-visual-wrap {
+  order: 2;
+}
+
+.planet-event-card[data-layout-side='right'] .planet-event-card-copy {
+  order: 1;
+}
+
+.planet-event-card-visual-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+}
+
+.planet-event-card-orbit {
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(233, 226, 246, 0.2);
+  border-radius: 999px;
+}
+
+.planet-event-card-visual {
+  position: relative;
+  width: 156px;
+  height: 156px;
+  border-radius: 999px;
+  box-shadow:
+    inset -22px -26px 40px rgba(5, 6, 18, 0.38),
+    0 20px 44px rgba(0, 0, 0, 0.28);
+}
+
+.planet-event-card-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.66), transparent 22%);
+}
+
+.planet-event-card--violet .planet-event-card-visual {
+  background: linear-gradient(145deg, #9c8cff 0%, #6557d3 42%, #2d2f72 100%);
+}
+
+.planet-event-card--blue .planet-event-card-visual {
+  background: linear-gradient(145deg, #8fdcff 0%, #467fda 46%, #21316e 100%);
+}
+
+.planet-event-card--rose .planet-event-card-visual {
+  background: linear-gradient(145deg, #ffbbd4 0%, #de6f9d 42%, #6a2d58 100%);
+}
+
+.planet-event-card-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.planet-event-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.planet-event-card-meta p,
+.planet-event-card-preview,
+.planet-event-card-editor {
+  margin: 0;
+  color: rgba(233, 226, 246, 0.76);
+}
+
+.planet-event-card-meta p {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.planet-event-card-copy h2 {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.planet-event-card-preview,
+.planet-event-card-editor {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
 .placeholder-page-card {
   padding: 28px 32px;
   border: 1px solid var(--border);
@@ -557,8 +720,46 @@ main {
     justify-self: start;
   }
 
+  .planet-archive::before {
+    left: 50%;
+  }
+
+  .planet-event-card,
+  .planet-event-card[data-layout-side='right'] {
+    grid-template-columns: 1fr;
+  }
+
+  .planet-event-card[data-layout-side='right'] .planet-event-card-visual-wrap,
+  .planet-event-card[data-layout-side='right'] .planet-event-card-copy {
+    order: initial;
+  }
+
   .placeholder-page-card {
     padding: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .planet-archive::before {
+    display: none;
+  }
+
+  .planet-event-card {
+    padding: 22px;
+  }
+
+  .planet-event-card-visual-wrap {
+    width: 180px;
+    height: 180px;
+  }
+
+  .planet-event-card-orbit {
+    inset: 12px;
+  }
+
+  .planet-event-card-visual {
+    width: 128px;
+    height: 128px;
   }
 }
 
