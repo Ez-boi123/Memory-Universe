@@ -1,12 +1,23 @@
 import type {
   PlanetEventCardViewModel,
+  PlanetEventDetailsById,
   PlanetEventDetailViewModel,
   PlanetPageViewModel,
   PlanetVariant,
 } from '@/types/planet';
 import type { MemoryEventSummary } from '@/types/domain';
 
-import { presentMockEvents } from './event-presenter';
+import { presentMockEventRecords, presentMockEvents } from './event-presenter';
+
+interface PlanetEventDetailSource {
+  body: string;
+  locationText?: string | null;
+}
+
+interface BuildPlanetPageViewModelInput {
+  events?: MemoryEventSummary[];
+  eventDetailSourceById?: Partial<Record<string, PlanetEventDetailSource>>;
+}
 
 const PLANET_VARIANTS: PlanetVariant[] = ['violet', 'blue', 'rose'];
 
@@ -54,6 +65,7 @@ function buildEventCard(
 
 function buildEventDetail(
   event: MemoryEventSummary,
+  detailSource: PlanetEventDetailSource,
   index: number,
 ): PlanetEventDetailViewModel {
   return {
@@ -61,26 +73,51 @@ function buildEventDetail(
     title: event.title,
     memoryDateLabel: event.memoryDate,
     eventTypeLabel: formatEventTypeLabel(event.eventType),
-    body: event.bodyPreview,
-    locationText: event.locationText ?? null,
+    body: detailSource.body,
+    locationText: detailSource.locationText ?? null,
     lastEditedBy: event.updatedBy,
     lastEditedAtLabel: event.updatedAt,
     planetVariant: PLANET_VARIANTS[index % PLANET_VARIANTS.length],
   };
 }
 
-export function buildPlanetPageViewModel(input?: {
-  events?: MemoryEventSummary[];
-}): PlanetPageViewModel {
+function buildDetailMap(
+  events: MemoryEventSummary[],
+  detailSourceById: Partial<Record<string, PlanetEventDetailSource>>,
+): PlanetEventDetailsById {
+  return Object.fromEntries(
+    events.flatMap((event, index) => {
+      const detailSource = detailSourceById[event.id];
+
+      if (!detailSource) {
+        return [];
+      }
+
+      return [[event.id, buildEventDetail(event, detailSource, index)]];
+    }),
+  );
+}
+
+export function buildPlanetPageViewModel(input?: BuildPlanetPageViewModelInput): PlanetPageViewModel {
+  const mockRecords = input?.events ? null : presentMockEventRecords();
   const source = input?.events ?? presentMockEvents();
+  const detailSourceById =
+    input?.eventDetailSourceById ??
+    Object.fromEntries(
+      (mockRecords ?? []).map((record) => [
+        record.id,
+        {
+          body: record.body,
+          locationText: record.locationText ?? null,
+        },
+      ]),
+    );
   const ordered = [...source].sort((left, right) => right.memoryDate.localeCompare(left.memoryDate));
 
   return {
     header: planetHeader,
     events: ordered.map((event, index) => buildEventCard(event, index)),
-    eventDetails: Object.fromEntries(
-      ordered.map((event, index) => [event.id, buildEventDetail(event, index)]),
-    ),
+    eventDetails: buildDetailMap(ordered, detailSourceById),
     createDefaults,
     emptyState: planetEmptyState,
   };

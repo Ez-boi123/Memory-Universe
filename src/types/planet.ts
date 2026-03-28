@@ -4,10 +4,10 @@ export type PlanetLayoutSide = 'left' | 'right';
 export type PlanetVariant = 'violet' | 'blue' | 'rose';
 
 export interface PlanetPageHeaderViewModel {
-  eyebrow: 'Planet';
-  title: 'Memory Planet';
+  eyebrow: string;
+  title: string;
   description: string;
-  actionLabel: 'New Event';
+  actionLabel: string;
 }
 
 export interface PlanetEventCardViewModel {
@@ -45,13 +45,15 @@ export interface PlanetEventFormValues {
 export interface PlanetEmptyStateViewModel {
   title: string;
   body: string;
-  actionLabel: 'New Event';
+  actionLabel: string;
 }
+
+export type PlanetEventDetailsById = Partial<Record<string, PlanetEventDetailViewModel>>;
 
 export interface PlanetPageViewModel {
   header: PlanetPageHeaderViewModel;
   events: PlanetEventCardViewModel[];
-  eventDetails: Record<string, PlanetEventDetailViewModel>;
+  eventDetails: PlanetEventDetailsById;
   createDefaults: PlanetEventFormValues;
   emptyState: PlanetEmptyStateViewModel;
 }
