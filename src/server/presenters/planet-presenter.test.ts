@@ -14,6 +14,7 @@ describe('buildPlanetPageViewModel', () => {
     ]);
     expect(model.events.map((event) => event.layoutSide)).toEqual(['left', 'right', 'left']);
     expect(model.events.map((event) => event.planetVariant)).toEqual(['violet', 'blue', 'rose']);
+    expect(model.events[0]).not.toHaveProperty('locationText');
 
     expect(model.eventDetails['event-placeholder-1']).toEqual({
       id: 'event-placeholder-1',
@@ -34,7 +35,7 @@ describe('buildPlanetPageViewModel', () => {
     const model = buildPlanetPageViewModel({ events: [] });
 
     expect(model.events).toEqual([]);
-    expect(model.emptyState.title).toContain('first event');
+    expect(model.emptyState.title).toBe('Record the first planet in this archive');
     expect(model.emptyState.body).toContain('Shared events will appear here');
   });
 });

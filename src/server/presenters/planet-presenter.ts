@@ -18,7 +18,7 @@ const planetHeader: PlanetPageViewModel['header'] = {
 };
 
 const planetEmptyState: PlanetPageViewModel['emptyState'] = {
-  title: 'Record the first event in this archive',
+  title: 'Record the first planet in this archive',
   body: 'Shared events will appear here as distinct planets once the first memory is saved.',
   actionLabel: 'New Event',
 };
@@ -45,7 +45,6 @@ function buildEventCard(
     memoryDateLabel: event.memoryDate,
     eventTypeLabel: formatEventTypeLabel(event.eventType),
     bodyPreview: event.bodyPreview,
-    locationText: event.locationText ?? null,
     lastEditedBy: event.updatedBy,
     lastEditedAtLabel: event.updatedAt,
     layoutSide: index % 2 === 0 ? 'left' : 'right',

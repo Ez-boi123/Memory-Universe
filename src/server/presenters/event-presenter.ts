@@ -25,7 +25,7 @@ export function presentMockEvents(): MemoryEventSummary[] {
     {
       id: 'event-placeholder-3',
       title: 'Third Shared Memory Placeholder',
-      bodyPreview: 'TODO: milestone details and version history will come from the real service layer later.',
+      bodyPreview: 'TODO: milestone details will come from the real service layer later.',
       memoryDate: '2026-03-18',
       locationText: 'Placeholder Garden',
       eventType: 'anniversary',

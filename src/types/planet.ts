@@ -16,7 +16,6 @@ export interface PlanetEventCardViewModel {
   memoryDateLabel: string;
   eventTypeLabel: string;
   bodyPreview: string;
-  locationText?: string | null;
   lastEditedBy: string;
   lastEditedAtLabel?: string;
   layoutSide: PlanetLayoutSide;
