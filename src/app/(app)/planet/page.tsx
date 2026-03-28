@@ -1,5 +1,6 @@
-import { EventListPlaceholder } from '@/components/planet/EventListPlaceholder';
+import { PlanetPage } from '@/components/planet/PlanetPage';
+import { buildPlanetPageViewModel } from '@/server/presenters/planet-presenter';
 
-export default function PlanetPage() {
-  return <EventListPlaceholder />;
+export default function PlanetPageRoute() {
+  return <PlanetPage model={buildPlanetPageViewModel()} />;
 }
