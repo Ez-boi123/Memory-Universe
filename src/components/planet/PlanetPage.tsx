@@ -67,7 +67,11 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   return (
     <div className="planet-page">
       <ModulePageHeader
-        actionLabel={model.header.actionLabel}
+        action={
+          <button className="planet-page-primary-action" type="button">
+            {model.header.actionLabel}
+          </button>
+        }
         description={model.header.description}
         eyebrow={model.header.eyebrow}
         title={model.header.title}

@@ -95,6 +95,7 @@ describe('PlanetPage', () => {
 
     expect(screen.getByText('Memory Planet')).toBeInTheDocument();
     expect(screen.getByText(/test description/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'New Event' })).toBeInTheDocument();
     expect(screen.getByTestId('planet-event-event-1')).toHaveAttribute(
       'data-layout-side',
       'left',

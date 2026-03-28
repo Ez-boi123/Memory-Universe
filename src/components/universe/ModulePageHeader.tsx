@@ -4,7 +4,8 @@ interface ModulePageHeaderProps {
   eyebrow: string;
   title: string;
   description: string;
-  actionLabel: string;
+  actionLabel?: string;
+  action?: React.ReactNode;
 }
 
 export function ModulePageHeader({
@@ -12,6 +13,7 @@ export function ModulePageHeader({
   title,
   description,
   actionLabel,
+  action,
 }: ModulePageHeaderProps) {
   return (
     <section className="module-page-header">
@@ -20,7 +22,8 @@ export function ModulePageHeader({
         <h1 className="page-title">{title}</h1>
         <p className="page-description">{description}</p>
       </div>
-      <div className="module-page-action">{actionLabel}</div>
+      {action ? <div className="module-page-action">{action}</div> : null}
+      {!action && actionLabel ? <div className="module-page-action">{actionLabel}</div> : null}
     </section>
   );
 }

@@ -683,6 +683,26 @@ main {
   line-height: 1.75;
 }
 
+.planet-event-card-preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.planet-page-primary-action {
+  padding: 12px 18px;
+  border: 1px solid rgba(233, 226, 246, 0.16);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  color: #f7f3ff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .placeholder-page-card {
   padding: 28px 32px;
   border: 1px solid var(--border);
