@@ -152,6 +152,19 @@ describe('PlanetPage', () => {
     expect(screen.getByRole('dialog', { name: /second test event/i })).toBeInTheDocument();
   });
 
+  it('keeps a locally opened modal visible across equivalent model rerenders', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<PlanetPage model={buildPlanetPageTestModel()} />);
+
+    await user.click(screen.getByRole('button', { name: /first test event/i }));
+
+    expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
+
+    rerender(<PlanetPage model={buildPlanetPageTestModel()} />);
+
+    expect(screen.getByRole('dialog', { name: /first test event/i })).toBeInTheDocument();
+  });
+
   it('does not navigate or open a modal when detail data is missing', async () => {
     const user = userEvent.setup();
     replace.mockReset();

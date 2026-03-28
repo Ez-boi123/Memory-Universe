@@ -26,7 +26,7 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
     }
 
     setSelectedEventId(null);
-  }, [initialEventId, model.eventDetails]);
+  }, [initialEventId]);
 
   function buildPlanetUrl(nextEventId: string | null) {
     const params = new URLSearchParams(searchParams?.toString());
