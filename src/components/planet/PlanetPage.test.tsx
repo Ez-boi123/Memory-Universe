@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -162,5 +162,24 @@ describe('PlanetPage', () => {
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('renders the supplied empty state when there are no events', () => {
+    render(
+      <PlanetPage
+        model={{
+          ...buildPlanetPageTestModel(),
+          events: [],
+        }}
+      />,
+    );
+
+    const emptyState = screen.getByText('Empty').closest('section');
+
+    expect(emptyState).not.toBeNull();
+    expect(within(emptyState as HTMLElement).getByText('Empty body')).toBeInTheDocument();
+    expect(
+      within(emptyState as HTMLElement).getByRole('button', { name: 'New Event' }),
+    ).toBeDisabled();
   });
 });

@@ -82,7 +82,23 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
         eyebrow={model.header.eyebrow}
         title={model.header.title}
       />
-      <PlanetArchive events={model.events} onOpen={handleOpen} />
+      {model.events.length === 0 ? (
+        <section className="planet-page-empty-state">
+          <h2>{model.emptyState.title}</h2>
+          <p>{model.emptyState.body}</p>
+          <button
+            aria-disabled="true"
+            className="planet-page-primary-action"
+            disabled
+            title="New Event creation is implemented in the next task."
+            type="button"
+          >
+            {model.emptyState.actionLabel}
+          </button>
+        </section>
+      ) : (
+        <PlanetArchive events={model.events} onOpen={handleOpen} />
+      )}
 
       {selectedEvent ? (
         <div style={modalBackdropStyle}>

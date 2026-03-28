@@ -528,7 +528,7 @@ main {
   position: absolute;
   top: 28px;
   bottom: 28px;
-  left: 110px;
+  left: 138px;
   width: 1px;
   background: linear-gradient(
     180deg,
@@ -698,6 +698,29 @@ main {
 .planet-page-primary-action:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.planet-page-empty-state {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding: 32px;
+  border: 1px solid rgba(233, 226, 246, 0.12);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(116, 96, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(14, 16, 33, 0.92), rgba(10, 12, 25, 0.88));
+  color: #f7f3ff;
+}
+
+.planet-page-empty-state h2,
+.planet-page-empty-state p {
+  margin: 0;
+}
+
+.planet-page-empty-state p {
+  color: rgba(233, 226, 246, 0.76);
+  line-height: 1.75;
 }
 
 .placeholder-page-card {
