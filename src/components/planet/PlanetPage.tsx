@@ -35,10 +35,19 @@ export function PlanetPage({ model, initialEventId = null }: PlanetPageProps) {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(initialEventId);
 
   useEffect(() => {
-    setSelectedEventId(initialEventId);
-  }, [initialEventId]);
+    if (!initialEventId || model.eventDetails[initialEventId]) {
+      setSelectedEventId(initialEventId);
+      return;
+    }
+
+    setSelectedEventId(null);
+  }, [initialEventId, model.eventDetails]);
 
   function handleOpen(eventId: string) {
+    if (!model.eventDetails[eventId]) {
+      return;
+    }
+
     setSelectedEventId(eventId);
     router.replace(`${pathname}?eventId=${encodeURIComponent(eventId)}`, {
       scroll: false,
