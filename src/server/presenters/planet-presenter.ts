@@ -2,10 +2,12 @@ import type {
   PlanetEventCardViewModel,
   PlanetEventDetailsById,
   PlanetEventDetailViewModel,
+  PlanetMemoryStripPhotoViewModel,
   PlanetPageViewModel,
   PlanetVariant,
 } from '@/types/planet';
 import type { MemoryEventSummary } from '@/types/domain';
+import { db } from '@/lib/db/client';
 
 import { presentMockEventRecords, presentMockEvents } from './event-presenter';
 
@@ -17,6 +19,7 @@ interface PlanetEventDetailSource {
 interface BuildPlanetPageViewModelInput {
   events?: MemoryEventSummary[];
   eventDetailSourceById?: Partial<Record<string, PlanetEventDetailSource>>;
+  relationshipId?: string | null;
 }
 
 const PLANET_VARIANTS: PlanetVariant[] = ['violet', 'blue', 'rose'];
@@ -49,6 +52,7 @@ function formatEventTypeLabel(eventType: MemoryEventSummary['eventType']): strin
 function buildEventCard(
   event: MemoryEventSummary,
   index: number,
+  memoryStrip: PlanetMemoryStripPhotoViewModel[],
 ): PlanetEventCardViewModel {
   return {
     id: event.id,
@@ -59,6 +63,7 @@ function buildEventCard(
     lastEditedBy: event.updatedBy,
     lastEditedAtLabel: event.updatedAt,
     layoutSide: index % 2 === 0 ? 'left' : 'right',
+    memoryStrip,
     planetVariant: PLANET_VARIANTS[index % PLANET_VARIANTS.length],
   };
 }
@@ -67,6 +72,7 @@ function buildEventDetail(
   event: MemoryEventSummary,
   detailSource: PlanetEventDetailSource,
   index: number,
+  memoryStrip: PlanetMemoryStripPhotoViewModel[],
 ): PlanetEventDetailViewModel {
   return {
     id: event.id,
@@ -77,8 +83,20 @@ function buildEventDetail(
     locationText: detailSource.locationText ?? null,
     lastEditedBy: event.updatedBy,
     lastEditedAtLabel: event.updatedAt,
+    memoryStrip,
     planetVariant: PLANET_VARIANTS[index % PLANET_VARIANTS.length],
   };
+}
+
+function buildMemoryStrip(
+  photos: { id: string; thumbnailUrl: string }[],
+  title: string,
+): PlanetMemoryStripPhotoViewModel[] {
+  return photos.slice(0, 4).map((photo, index) => ({
+    alt: `${title} memory fragment ${index + 1}`,
+    id: photo.id,
+    thumbnailUrl: photo.thumbnailUrl,
+  }));
 }
 
 function buildDetailMap(
@@ -93,12 +111,92 @@ function buildDetailMap(
         return [];
       }
 
-      return [[event.id, buildEventDetail(event, detailSource, index)]];
+      return [[event.id, buildEventDetail(event, detailSource, index, [])]];
     }),
   );
 }
 
-export function buildPlanetPageViewModel(input?: BuildPlanetPageViewModelInput): PlanetPageViewModel {
+export async function buildPlanetPageViewModel(
+  input?: BuildPlanetPageViewModelInput,
+): Promise<PlanetPageViewModel> {
+  if (input?.relationshipId) {
+    const storedEvents = await db.memoryEvent.findMany({
+      include: {
+        eventPhotos: {
+          orderBy: {
+            uploadedAt: 'desc',
+          },
+        },
+      },
+      orderBy: {
+        memoryDate: 'desc',
+      },
+      where: {
+        deletedAt: null,
+        relationshipId: input.relationshipId,
+      },
+    });
+
+    return {
+      header: planetHeader,
+      events: storedEvents.map((event, index) =>
+        buildEventCard(
+          {
+            bodyPreview:
+              event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
+            eventType: event.eventType,
+            id: event.id,
+            locationText: event.locationText,
+            memoryDate: event.memoryDate.toISOString().slice(0, 10),
+            title: event.title,
+            updatedAt: event.updatedAt.toISOString(),
+            updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
+          },
+          index,
+          buildMemoryStrip(
+            event.eventPhotos.map((eventPhoto) => ({
+              id: eventPhoto.id,
+              thumbnailUrl: eventPhoto.thumbnailUrl,
+            })),
+            event.title,
+          ),
+        ),
+      ),
+      eventDetails: Object.fromEntries(
+        storedEvents.map((event, index) => [
+          event.id,
+          buildEventDetail(
+            {
+              bodyPreview:
+                event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
+              eventType: event.eventType,
+              id: event.id,
+              locationText: event.locationText,
+              memoryDate: event.memoryDate.toISOString().slice(0, 10),
+              title: event.title,
+              updatedAt: event.updatedAt.toISOString(),
+              updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
+            },
+            {
+              body: event.body,
+              locationText: event.locationText,
+            },
+            index,
+            buildMemoryStrip(
+              event.eventPhotos.map((eventPhoto) => ({
+                id: eventPhoto.id,
+                thumbnailUrl: eventPhoto.thumbnailUrl,
+              })),
+              event.title,
+            ),
+          ),
+        ]),
+      ),
+      createDefaults,
+      emptyState: planetEmptyState,
+    };
+  }
+
   const mockRecords = input?.events ? null : presentMockEventRecords();
   const source = input?.events ?? presentMockEvents();
   const detailSourceById =
@@ -116,8 +214,18 @@ export function buildPlanetPageViewModel(input?: BuildPlanetPageViewModelInput):
 
   return {
     header: planetHeader,
-    events: ordered.map((event, index) => buildEventCard(event, index)),
-    eventDetails: buildDetailMap(ordered, detailSourceById),
+    events: ordered.map((event, index) => buildEventCard(event, index, [])),
+    eventDetails: Object.fromEntries(
+      Object.entries(buildDetailMap(ordered, detailSourceById)).map(([eventId, detail]) => [
+        eventId,
+        detail
+          ? {
+              ...detail,
+              memoryStrip: [],
+            }
+          : detail,
+      ]),
+    ),
     createDefaults,
     emptyState: planetEmptyState,
   };

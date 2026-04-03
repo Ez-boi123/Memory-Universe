@@ -3,6 +3,12 @@ import type { EventType } from '@/types/domain';
 export type PlanetLayoutSide = 'left' | 'right';
 export type PlanetVariant = 'violet' | 'blue' | 'rose';
 
+export interface PlanetMemoryStripPhotoViewModel {
+  id: string;
+  alt: string;
+  thumbnailUrl: string;
+}
+
 export interface PlanetPageHeaderViewModel {
   eyebrow: string;
   title: string;
@@ -15,11 +21,13 @@ export interface PlanetEventCardViewModel {
   title: string;
   memoryDateLabel: string;
   eventTypeLabel: string;
+  locationText?: string | null;
   bodyPreview: string;
   lastEditedBy: string;
   lastEditedAtLabel?: string;
   layoutSide: PlanetLayoutSide;
   planetVariant: PlanetVariant;
+  memoryStrip: PlanetMemoryStripPhotoViewModel[];
 }
 
 export interface PlanetEventDetailViewModel {
@@ -32,6 +40,7 @@ export interface PlanetEventDetailViewModel {
   lastEditedBy: string;
   lastEditedAtLabel?: string;
   planetVariant: PlanetVariant;
+  memoryStrip: PlanetMemoryStripPhotoViewModel[];
 }
 
 export interface PlanetEventFormValues {

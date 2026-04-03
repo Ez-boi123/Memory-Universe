@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { buildPlanetPageViewModel } from './planet-presenter';
 
 describe('buildPlanetPageViewModel', () => {
-  it('orders event cards newest first, alternates layout sides, and shapes modal detail data from full-body sources', () => {
-    const model = buildPlanetPageViewModel();
+  it('orders event cards newest first, alternates layout sides, and shapes modal detail data from full-body sources', async () => {
+    const model = await buildPlanetPageViewModel();
 
     expect(model.header.title).toBe('Memory Planet');
     expect(model.events.map((event) => event.id)).toEqual([
@@ -25,22 +25,23 @@ describe('buildPlanetPageViewModel', () => {
       locationText: 'Placeholder City',
       lastEditedBy: 'Member One',
       lastEditedAtLabel: '2026-03-24T20:00:00Z',
+      memoryStrip: [],
       planetVariant: 'rose',
     });
     expect(model.eventDetails['event-placeholder-1']).not.toHaveProperty('createdAt');
     expect(model.emptyState.actionLabel).toBe('New Event');
   });
 
-  it('returns the empty orbital state when no events are present', () => {
-    const model = buildPlanetPageViewModel({ events: [] });
+  it('returns the empty orbital state when no events are present', async () => {
+    const model = await buildPlanetPageViewModel({ events: [] });
 
     expect(model.events).toEqual([]);
     expect(model.emptyState.title).toBe('Record the first planet in this archive');
     expect(model.emptyState.body).toContain('Shared events will appear here');
   });
 
-  it('uses fallback labels for missing event types and keeps nullable locations honest in sparse detail lookups', () => {
-    const model = buildPlanetPageViewModel({
+  it('uses fallback labels for missing event types and keeps nullable locations honest in sparse detail lookups', async () => {
+    const model = await buildPlanetPageViewModel({
       events: [
         {
           id: 'event-edge-1',
@@ -70,6 +71,7 @@ describe('buildPlanetPageViewModel', () => {
       locationText: null,
       lastEditedBy: 'Member Three',
       lastEditedAtLabel: '2026-03-20T08:00:00Z',
+      memoryStrip: [],
       planetVariant: 'violet',
     });
     expect(model.eventDetails['missing-event']).toBeUndefined();

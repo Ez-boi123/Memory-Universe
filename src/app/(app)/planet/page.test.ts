@@ -6,6 +6,16 @@ const { mockModel } = vi.hoisted(() => ({
   mockModel: { source: 'mock-model' },
 }));
 
+vi.mock('@/lib/auth/session', () => ({
+  getSessionUser: async () => ({
+    user: {
+      id: 'user-1',
+      relationshipId: 'relationship-1',
+    },
+  }),
+  resolveSessionRelationship: async () => 'relationship-1',
+}));
+
 vi.mock('@/components/planet/PlanetPage', () => ({
   PlanetPage: ({
     initialEventId,
@@ -22,10 +32,11 @@ vi.mock('@/components/planet/PlanetPage', () => ({
 }));
 
 vi.mock('@/server/presenters/planet-presenter', () => ({
-  buildPlanetPageViewModel: () => mockModel,
+  buildPlanetPageViewModel: async () => mockModel,
 }));
 
-import PlanetPageRoute, { normalizePlanetEventIdParam } from './page';
+import PlanetPageRoute from './page';
+import { normalizePlanetEventIdParam } from './normalize-planet-event-id-param';
 
 describe('normalizePlanetEventIdParam', () => {
   it('returns a string param as-is', () => {

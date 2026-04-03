@@ -37,6 +37,11 @@ enum PhotoArchiveStatus {
   archived
 }
 
+enum EventPhotoUploadStatus {
+  pending
+  consumed
+}
+
 model User {
   id              String               @id @default(cuid())
   email           String               @unique
@@ -57,6 +62,8 @@ model User {
   createdEvents   MemoryEvent[]        @relation("EventCreatedBy")
   updatedEvents   MemoryEvent[]        @relation("EventUpdatedBy")
   eventVersions   MemoryEventVersion[]
+  eventPhotos     EventPhoto[]
+  eventPhotoUploads EventPhotoUpload[]
   uploadedPhotos  Photo[]
   messages        Message[]
 
@@ -72,6 +79,7 @@ model Relationship {
   members    RelationshipMember[]
   invites    Invite[]
   events     MemoryEvent[]
+  eventPhotoUploads EventPhotoUpload[]
   photos     Photo[]
   messages   Message[]
 
@@ -164,22 +172,47 @@ model Photo {
   updatedAt      DateTime           @updatedAt
   relationship   Relationship       @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
   uploader       User               @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
-  eventPhotos    EventPhoto[]
-
   @@index([relationshipId, memoryDate(sort: Desc)])
   @@index([relationshipId, archiveStatus])
   @@map("photos")
 }
 
 model EventPhoto {
-  id      String      @id @default(cuid())
-  eventId String
-  photoId String
-  event   MemoryEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  photo   Photo       @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  id           String      @id @default(cuid())
+  eventId      String
+  uploadedBy   String
+  originalUrl  String
+  displayUrl   String
+  thumbnailUrl String
+  storageKey   String      @unique
+  uploadedAt   DateTime
+  createdAt    DateTime    @default(now())
+  event        MemoryEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  uploader     User        @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
 
-  @@unique([eventId, photoId])
+  @@index([eventId, uploadedAt(sort: Desc)])
   @@map("event_photos")
+}
+
+model EventPhotoUpload {
+  id                String                 @id @default(cuid())
+  relationshipId    String
+  uploadedBy        String
+  originalUrl       String
+  displayUrl        String
+  thumbnailUrl      String
+  storageKey        String                 @unique
+  uploadedAt        DateTime
+  status            EventPhotoUploadStatus @default(pending)
+  consumedAt        DateTime?
+  consumedByEventId String?
+  createdAt         DateTime               @default(now())
+  relationship      Relationship           @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  uploader          User                   @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@index([status, uploadedAt(sort: Asc)])
+  @@index([relationshipId, uploadedBy, status])
+  @@map("event_photo_uploads")
 }
 
 model Message {
