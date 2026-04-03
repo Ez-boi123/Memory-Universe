@@ -6,7 +6,7 @@ import { ModulePageHeader } from './ModulePageHeader';
 
 describe('ModulePageHeader', () => {
   it('renders eyebrow, title, description, and a non-interactive action label', () => {
-    render(
+    const { container } = render(
       <ModulePageHeader
         eyebrow="Planet"
         title="Memory Planet"
@@ -20,5 +20,22 @@ describe('ModulePageHeader', () => {
     expect(screen.getByText('Structured shared memory events.')).toBeInTheDocument();
     expect(screen.getByText('New Event')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'New Event' })).toBeNull();
+    expect(container.querySelector('.module-page-eyebrow')).not.toBeNull();
+    expect(container.querySelector('.module-page-title')).not.toBeNull();
+    expect(container.querySelector('.module-page-description')).not.toBeNull();
+  });
+
+  it('renders a provided action node instead of the plain action label branch', () => {
+    render(
+      <ModulePageHeader
+        action={<button type="button">Open Modal</button>}
+        description="Structured shared memory events."
+        eyebrow="Planet"
+        title="Memory Planet"
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Open Modal' })).toBeInTheDocument();
+    expect(screen.queryByText('New Event')).toBeNull();
   });
 });

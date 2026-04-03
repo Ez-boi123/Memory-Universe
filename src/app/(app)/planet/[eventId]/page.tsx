@@ -1,4 +1,4 @@
-import { EventDetailPlaceholder } from '@/components/planet/EventDetailPlaceholder';
+import { redirect } from 'next/navigation';
 
 interface EventDetailPageProps {
   params: Promise<{
@@ -8,6 +8,5 @@ interface EventDetailPageProps {
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { eventId } = await params;
-
-  return <EventDetailPlaceholder eventId={eventId} />;
+  redirect(`/planet?eventId=${encodeURIComponent(eventId)}`);
 }
