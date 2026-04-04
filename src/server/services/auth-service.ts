@@ -1,7 +1,21 @@
 import { getDatabaseConfigurationError, isDatabaseConfigured } from '@/lib/env';
 import { hashPassword, verifyPassword } from '@/lib/auth/password';
+import { buildCandidateRelationCode } from '@/lib/auth/relation-code';
 import { validateRegisterInput } from '@/lib/validation/auth';
 import { authRepository } from '@/server/repositories/auth-repository';
+
+async function generateUniqueRelationCode(displayName: string) {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const candidate = buildCandidateRelationCode(displayName);
+    const existingUser = await authRepository.findUserByRelationCode(candidate);
+
+    if (!existingUser) {
+      return candidate;
+    }
+  }
+
+  throw new Error('Unable to generate a unique relation code.');
+}
 
 export const authService = {
   register: async ({
@@ -47,10 +61,12 @@ export const authService = {
     }
 
     const passwordHash = await hashPassword(password);
+    const relationCode = await generateUniqueRelationCode(displayName.trim());
     const user = await authRepository.createUser({
       email: normalizedEmail,
       displayName: displayName.trim(),
       passwordHash,
+      relationCode,
     });
 
     return {
@@ -93,6 +109,29 @@ export const authService = {
     return {
       ok: true as const,
       user,
+    };
+  },
+  deleteAccount: async (userId: string) => {
+    if (!isDatabaseConfigured()) {
+      return {
+        error: getDatabaseConfigurationError(),
+        ok: false as const,
+      };
+    }
+
+    const user = await authRepository.findUserById(userId);
+
+    if (!user) {
+      return {
+        error: 'Account could not be found.',
+        ok: false as const,
+      };
+    }
+
+    await authRepository.deleteUserById(userId);
+
+    return {
+      ok: true as const,
     };
   },
 };

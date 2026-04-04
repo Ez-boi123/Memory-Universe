@@ -45,6 +45,7 @@ enum EventPhotoUploadStatus {
 model User {
   id              String               @id @default(cuid())
   email           String               @unique
+  relationCode    String?              @unique
   emailVerified   DateTime?
   name            String?
   image           String?
@@ -135,6 +136,7 @@ model MemoryEvent {
   updater        User                 @relation("EventUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
   versions       MemoryEventVersion[]
   eventPhotos    EventPhoto[]
+  syncedPhotos   Photo[]
 
   @@index([relationshipId, memoryDate(sort: Desc)])
   @@map("memory_events")
@@ -160,6 +162,9 @@ model MemoryEventVersion {
 model Photo {
   id             String             @id @default(cuid())
   relationshipId String
+  relatedEventId String?
+  eventTitle     String?
+  note           String?
   uploadedBy     String
   originalUrl    String
   displayUrl     String
@@ -171,9 +176,11 @@ model Photo {
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   relationship   Relationship       @relation(fields: [relationshipId], references: [id], onDelete: Cascade)
+  relatedEvent   MemoryEvent?       @relation(fields: [relatedEventId], references: [id], onDelete: SetNull)
   uploader       User               @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
   @@index([relationshipId, memoryDate(sort: Desc)])
   @@index([relationshipId, archiveStatus])
+  @@index([relatedEventId])
   @@map("photos")
 }
 

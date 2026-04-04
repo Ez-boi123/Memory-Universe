@@ -2,16 +2,24 @@ import { randomUUID } from 'node:crypto';
 
 import { getObjectStorageConfigurationError, isObjectStorageConfigured } from '@/lib/env';
 import { objectStorage } from '@/lib/storage/object-storage';
-import { validatePhotoUpload } from '@/lib/validation/photo';
+import { validatePhotoArchive, validatePhotoUpload } from '@/lib/validation/photo';
 import { eventPhotoUploadRepository } from '@/server/repositories/event-photo-upload-repository';
 import { photoRepository } from '@/server/repositories/photo-repository';
 export const photoService = {
   uploadPhoto: async ({
+    archiveDirectly,
+    eventTitle,
     file,
+    memoryDate,
+    note,
     relationshipId,
     uploadedBy,
   }: {
+    archiveDirectly?: boolean;
+    eventTitle?: string;
     file: File;
+    memoryDate?: string;
+    note?: string;
     relationshipId: string;
     uploadedBy: string;
   }) => {
@@ -35,6 +43,17 @@ export const photoService = {
       };
     }
 
+    if (archiveDirectly) {
+      const archiveValidation = validatePhotoArchive({ memoryDate });
+
+      if (!archiveValidation.success) {
+        return {
+          errors: archiveValidation.errors,
+          ok: false as const,
+        };
+      }
+    }
+
     const extension = file.name.includes('.') ? file.name.split('.').pop() : 'jpg';
     const key = `planet-photos/tmp/${relationshipId}/${randomUUID()}.${extension}`;
     const body = Buffer.from(await file.arrayBuffer());
@@ -44,6 +63,26 @@ export const photoService = {
       key,
     });
     const uploadedAt = new Date();
+
+    if (archiveDirectly) {
+      const photo = await photoRepository.createArchivedPhoto({
+        displayUrl: uploaded.url,
+        eventTitle: eventTitle?.trim(),
+        memoryDate: new Date(`${memoryDate}T00:00:00.000Z`),
+        note: note?.trim(),
+        originalUrl: uploaded.url,
+        relationshipId,
+        thumbnailUrl: uploaded.url,
+        uploadedAt,
+        uploadedBy,
+      });
+
+      return {
+        ok: true as const,
+        photo,
+      };
+    }
+
     const temporaryUpload = await eventPhotoUploadRepository.createTemporaryUpload({
       displayUrl: uploaded.url,
       originalUrl: uploaded.url,
@@ -130,6 +169,54 @@ export const photoService = {
 
     return {
       cleanedUploadCount: expiredUploads.length,
+      ok: true as const,
+    };
+  },
+  deleteTimelinePhoto: async ({
+    photoId,
+    relationshipId,
+  }: {
+    photoId: string;
+    relationshipId: string;
+  }) => {
+    const photo = await photoRepository.findArchivedById(photoId);
+
+    if (
+      !photo ||
+      photo.archiveStatus !== 'archived' ||
+      photo.relationshipId !== relationshipId
+    ) {
+      return {
+        errors: ['This photo could not be found.'],
+        ok: false as const,
+      };
+    }
+
+    await photoRepository.deleteArchivedById(photoId);
+
+    return {
+      ok: true as const,
+    };
+  },
+  deleteTimelinePhotos: async ({
+    photoIds,
+    relationshipId,
+  }: {
+    photoIds: string[];
+    relationshipId: string;
+  }) => {
+    for (const photoId of photoIds) {
+      const result = await photoService.deleteTimelinePhoto({
+        photoId,
+        relationshipId,
+      });
+
+      if (!result.ok) {
+        return result;
+      }
+    }
+
+    return {
       ok: true as const,
     };
   },

@@ -33,6 +33,10 @@ export async function POST(request: NextRequest) {
 
   const requestFormData = await request.formData();
   const file = requestFormData.get('file');
+  const archiveDirectly = requestFormData.get('archiveDirectly') === 'true';
+  const eventTitle = String(requestFormData.get('eventTitle') ?? '');
+  const memoryDate = String(requestFormData.get('memoryDate') ?? '');
+  const note = String(requestFormData.get('note') ?? '');
 
   if (!(file instanceof File)) {
     return Response.json(
@@ -47,7 +51,11 @@ export async function POST(request: NextRequest) {
   }
 
   const result = await photoService.uploadPhoto({
+    archiveDirectly,
+    eventTitle,
     file,
+    memoryDate,
+    note,
     relationshipId,
     uploadedBy: user.id,
   });
@@ -66,6 +74,7 @@ export async function POST(request: NextRequest) {
 
   return Response.json({
     ok: true,
+    photo: 'photo' in result ? result.photo : null,
     upload: result.upload,
   });
 }

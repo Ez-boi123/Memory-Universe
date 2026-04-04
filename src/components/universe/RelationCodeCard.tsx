@@ -1,4 +1,7 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { bindRelationshipByCodeAction } from '@/app/(app)/settings/relationship/actions';
 import type { RelationCodeCardViewModel } from '@/types/account';
 
 interface RelationCodeCardProps {
@@ -6,6 +9,27 @@ interface RelationCodeCardProps {
 }
 
 export function RelationCodeCard({ relationCode }: RelationCodeCardProps) {
+  const [copyLabel, setCopyLabel] = useState(relationCode.copyLabel);
+
+  useEffect(() => {
+    setCopyLabel(relationCode.copyLabel);
+  }, [relationCode.copyLabel]);
+
+  async function handleCopyCode() {
+    try {
+      await navigator.clipboard.writeText(relationCode.code);
+      setCopyLabel('Copied');
+      window.setTimeout(() => {
+        setCopyLabel(relationCode.copyLabel);
+      }, 1600);
+    } catch {
+      setCopyLabel('Copy Failed');
+      window.setTimeout(() => {
+        setCopyLabel(relationCode.copyLabel);
+      }, 1600);
+    }
+  }
+
   return (
     <section
       className="account-section account-section--relation-code"
@@ -25,19 +49,26 @@ export function RelationCodeCard({ relationCode }: RelationCodeCardProps) {
       </h2>
       <div className="account-code-panel">
         <div className="account-code-value">{relationCode.code}</div>
-        <button type="button">{relationCode.copyLabel}</button>
+        <button type="button" onClick={handleCopyCode}>
+          {copyLabel}
+        </button>
       </div>
       {relationCode.bindHint ? <p className="account-inline-hint">{relationCode.bindHint}</p> : null}
-      <div className="account-bind-inline">
+      {relationCode.bindError ? <p className="auth-error">{relationCode.bindError}</p> : null}
+      {relationCode.bindSuccess ? <p className="auth-message">{relationCode.bindSuccess}</p> : null}
+      <form action={bindRelationshipByCodeAction} className="account-bind-inline">
+        <input name="returnTo" type="hidden" value="/settings/account" />
         <input
           aria-label="Relationship Code"
           className="account-bind-input account-bind-input--full"
           type="text"
+          name="relationCode"
           defaultValue=""
-          placeholder="Enter relationship code"
+          placeholder="Enter the other user's relation code"
+          required
         />
-        <button type="button">{relationCode.bindLabel}</button>
-      </div>
+        <button type="submit">{relationCode.bindLabel}</button>
+      </form>
       <div className="account-relation-code-illustration" aria-hidden="true">
         <div className="account-relation-code-illustration__halo" />
         <div className="account-relation-code-illustration__orbit account-relation-code-illustration__orbit--one" />

@@ -44,6 +44,7 @@ export async function POST(request: Request) {
     eventType?: EventType;
     locationText?: string;
     memoryDate?: string;
+    syncToMilkyWay?: boolean;
     temporaryUploadIds?: string[];
     title?: string;
   };
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
     locationText: payload.locationText ?? '',
     memoryDate: payload.memoryDate ?? '',
     relationshipId,
+    syncToMilkyWay: payload.syncToMilkyWay === true,
     temporaryUploadIds: Array.isArray(payload.temporaryUploadIds)
       ? payload.temporaryUploadIds.filter(Boolean)
       : [],

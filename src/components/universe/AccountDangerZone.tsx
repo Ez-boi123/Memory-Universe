@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { deleteAccountAction } from '@/app/(auth)/actions';
 import type { AccountDangerZoneViewModel } from '@/types/account';
 import { SignOutForm } from '@/components/auth/SignOutForm';
 
@@ -41,14 +42,14 @@ export function AccountDangerZone({ dangerZone }: AccountDangerZoneProps) {
               <p className="account-danger-zone-dialog-copy">
                 Deleting your account will permanently remove all records and they cannot be recovered.
               </p>
-              <div className="account-danger-zone-dialog-actions">
+              <form action={deleteAccountAction} className="account-danger-zone-dialog-actions">
                 <button onClick={() => setIsConfirmOpen(false)} type="button">
                   Cancel
                 </button>
-                <button className="account-danger-zone-confirm" type="button">
+                <button className="account-danger-zone-confirm" type="submit">
                   Confirm
                 </button>
-              </div>
+              </form>
             </div>
           </div>,
           document.body

@@ -12,6 +12,7 @@ export interface MilkyWayUploadPanelModel {
 export interface MilkyWayEntryModel {
   id: string;
   dateLabel: string;
+  eventTitle?: string;
   note?: string;
   photos: MilkyWayPhotoModel[];
 }
@@ -20,6 +21,7 @@ export interface MilkyWayPhotoModel {
   id: string;
   alt: string;
   accent: 'violet' | 'blue' | 'rose';
+  imageUrl: string;
 }
 
 export interface MilkyWaySectionModel {

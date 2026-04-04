@@ -1,7 +1,10 @@
-import { presentMockPhotos } from '@/server/presenters/photo-presenter';
+import type { PhotoSummary } from '@/types/domain';
 
-export function PendingArchivePlaceholder() {
-  const photos = presentMockPhotos().filter((photo) => photo.archiveStatus === 'pending_archive');
+interface PendingArchivePlaceholderProps {
+  photos: PhotoSummary[];
+}
+
+export function PendingArchivePlaceholder({ photos }: PendingArchivePlaceholderProps) {
 
   return (
     <section className="page-card">
@@ -11,15 +14,22 @@ export function PendingArchivePlaceholder() {
         TODO: upload, archive confirmation, and event linking are all placeholder-only in this
         scaffold.
       </p>
-      <div className="placeholder-grid">
-        {photos.map((photo) => (
-          <div key={photo.id} className="placeholder-panel">
-            <h2>{photo.id}</h2>
-            <p>Uploaded At: {photo.uploadedAt}</p>
-            <p>TODO: confirm memory date before moving to timeline.</p>
-          </div>
-        ))}
-      </div>
+      {photos.length > 0 ? (
+        <div className="placeholder-grid">
+          {photos.map((photo) => (
+            <div key={photo.id} className="placeholder-panel">
+              <h2>{photo.id}</h2>
+              <p>Uploaded At: {photo.uploadedAt}</p>
+              <p>TODO: confirm memory date before moving to timeline.</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="placeholder-panel">
+          <h2>No pending archive photos</h2>
+          <p>New uploads waiting for memory-date confirmation will appear here.</p>
+        </div>
+      )}
     </section>
   );
 }

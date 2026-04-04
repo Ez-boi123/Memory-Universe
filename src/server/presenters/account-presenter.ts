@@ -2,6 +2,8 @@ import type { AccountPageViewModel } from '@/types/account';
 import type { RelationshipSummary, SessionUserSummary } from '@/types/domain';
 
 export interface BuildAccountPageViewModelArgs {
+  bindError?: string;
+  bindSuccess?: string;
   relationships?: AccountPageViewModel['relationships']['items'];
   relationship?: RelationshipSummary | null;
   sessionUser?: SessionUserSummary | null;
@@ -35,16 +37,19 @@ export function buildAccountPageViewModel(
       title: 'Associated Relationships',
       description: '',
       emptyTitle: 'No relationships connected yet',
-      emptyBody: 'Use your relation code to bind this account to a shared memory universe.',
+      emptyBody: 'Use your personal relation code to connect this account to a shared memory universe.',
       items: relationshipItems,
     },
     relationCode: {
       title: 'Relation Code',
-      description: 'Use this code to bind a relationship to your account.',
-      code: buildRelationCode(args.relationship?.id),
+      description:
+        'This is your personal relation code. Another user can enter it to bind a shared relationship with you.',
+      code: buildRelationCode(args.sessionUser?.relationCode),
       copyLabel: 'Copy Code',
       bindLabel: 'Bind',
       bindHint: '',
+      bindError: args.bindError,
+      bindSuccess: args.bindSuccess,
     },
     security: {
       title: 'Security',
@@ -104,10 +109,10 @@ function buildRelationshipCard(
   };
 }
 
-function buildRelationCode(relationshipId?: string | null) {
-  if (!relationshipId) {
-    return 'MU-REL-2048';
+function buildRelationCode(relationCode?: string | null) {
+  if (!relationCode) {
+    return 'MU-USER-2048';
   }
 
-  return `MU-${relationshipId.replace(/[^a-z0-9]/gi, '').slice(0, 8).toUpperCase()}`;
+  return relationCode;
 }

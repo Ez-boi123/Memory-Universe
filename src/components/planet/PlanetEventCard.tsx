@@ -8,7 +8,7 @@ interface PlanetEventCardProps {
 }
 
 export function PlanetEventCard({ event, onOpen }: PlanetEventCardProps) {
-  const orbitalFragments = event.memoryStrip.slice(0, 5);
+  const orbitalFragments = event.memoryStrip;
 
   return (
     <button
@@ -23,7 +23,10 @@ export function PlanetEventCard({ event, onOpen }: PlanetEventCardProps) {
           className="planet-event-card-ring"
           data-testid={`planet-sphere-ring-${event.id}`}
         />
-        <div className="planet-event-card-fragments">
+        <div
+          className="planet-event-card-fragments"
+          data-testid={`planet-sphere-fragments-${event.id}`}
+        >
           {orbitalFragments.map((photo, index) => {
             const angleStep = orbitalFragments.length > 1 ? 360 / orbitalFragments.length : 0;
             const angle = orbitalFragments.length > 1 ? index * angleStep - 90 : -90;

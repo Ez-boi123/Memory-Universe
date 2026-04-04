@@ -50,17 +50,17 @@ export type UniverseModuleGalleryViewModel = readonly [
 export type UniverseRecentPreviewViewModel = readonly [
   {
     label: 'Latest Event';
-    title: 'First Shared Chapter';
+    title: string;
     description: string;
   },
   {
     label: 'Latest Photo Moment';
-    title: 'A Memory Waiting In Time';
+    title: string;
     description: string;
   },
   {
     label: 'Latest Message';
-    title: 'A Small Note Still Glowing';
+    title: string;
     description: string;
   },
 ];

@@ -1,24 +1,16 @@
 import type {
   PlanetEventCardViewModel,
-  PlanetEventDetailsById,
   PlanetEventDetailViewModel,
   PlanetMemoryStripPhotoViewModel,
   PlanetPageViewModel,
   PlanetVariant,
 } from '@/types/planet';
 import type { MemoryEventSummary } from '@/types/domain';
-import { db } from '@/lib/db/client';
-
-import { presentMockEventRecords, presentMockEvents } from './event-presenter';
-
-interface PlanetEventDetailSource {
-  body: string;
-  locationText?: string | null;
-}
+import { eventService } from '@/server/services/event-service';
 
 interface BuildPlanetPageViewModelInput {
+  eventDetailSourceById?: Partial<Record<string, { body: string; locationText?: string | null }>>;
   events?: MemoryEventSummary[];
-  eventDetailSourceById?: Partial<Record<string, PlanetEventDetailSource>>;
   relationshipId?: string | null;
 }
 
@@ -37,16 +29,30 @@ const planetEmptyState: PlanetPageViewModel['emptyState'] = {
   actionLabel: 'New Event',
 };
 
-const createDefaults: PlanetPageViewModel['createDefaults'] = {
-  title: '',
-  memoryDate: '',
-  eventType: 'daily',
-  locationText: '',
-  body: '',
-};
+function buildCreateDefaults(): PlanetPageViewModel['createDefaults'] {
+  return {
+    title: '',
+    memoryDate: new Date().toISOString().slice(0, 10),
+    eventType: 'daily',
+    locationText: '',
+    body: '',
+    syncToMilkyWay: false,
+  };
+}
 
 function formatEventTypeLabel(eventType: MemoryEventSummary['eventType']): string {
   return eventType ? eventType[0].toUpperCase() + eventType.slice(1) : 'Memory';
+}
+
+function buildMemoryStrip(
+  photos: { id: string; thumbnailUrl: string }[],
+  title: string,
+): PlanetMemoryStripPhotoViewModel[] {
+  return photos.map((photo, index) => ({
+    alt: `${title} memory fragment ${index + 1}`,
+    id: photo.id,
+    thumbnailUrl: photo.thumbnailUrl,
+  }));
 }
 
 function buildEventCard(
@@ -55,133 +61,83 @@ function buildEventCard(
   memoryStrip: PlanetMemoryStripPhotoViewModel[],
 ): PlanetEventCardViewModel {
   return {
-    id: event.id,
-    title: event.title,
-    memoryDateLabel: event.memoryDate,
-    eventTypeLabel: formatEventTypeLabel(event.eventType),
     bodyPreview: event.bodyPreview,
-    lastEditedBy: event.updatedBy,
+    eventTypeLabel: formatEventTypeLabel(event.eventType),
+    id: event.id,
     lastEditedAtLabel: event.updatedAt,
+    lastEditedBy: event.updatedBy,
     layoutSide: index % 2 === 0 ? 'left' : 'right',
+    memoryDateLabel: event.memoryDate,
     memoryStrip,
     planetVariant: PLANET_VARIANTS[index % PLANET_VARIANTS.length],
+    title: event.title,
   };
 }
 
 function buildEventDetail(
   event: MemoryEventSummary,
-  detailSource: PlanetEventDetailSource,
   index: number,
+  body: string,
+  locationText: string | null | undefined,
   memoryStrip: PlanetMemoryStripPhotoViewModel[],
 ): PlanetEventDetailViewModel {
   return {
-    id: event.id,
-    title: event.title,
-    memoryDateLabel: event.memoryDate,
+    body,
     eventTypeLabel: formatEventTypeLabel(event.eventType),
-    body: detailSource.body,
-    locationText: detailSource.locationText ?? null,
-    lastEditedBy: event.updatedBy,
+    id: event.id,
     lastEditedAtLabel: event.updatedAt,
+    lastEditedBy: event.updatedBy,
+    locationText: locationText ?? null,
+    memoryDateLabel: event.memoryDate,
     memoryStrip,
     planetVariant: PLANET_VARIANTS[index % PLANET_VARIANTS.length],
+    title: event.title,
   };
 }
 
-function buildMemoryStrip(
-  photos: { id: string; thumbnailUrl: string }[],
-  title: string,
-): PlanetMemoryStripPhotoViewModel[] {
-  return photos.slice(0, 4).map((photo, index) => ({
-    alt: `${title} memory fragment ${index + 1}`,
-    id: photo.id,
-    thumbnailUrl: photo.thumbnailUrl,
-  }));
-}
-
-function buildDetailMap(
-  events: MemoryEventSummary[],
-  detailSourceById: Partial<Record<string, PlanetEventDetailSource>>,
-): PlanetEventDetailsById {
-  return Object.fromEntries(
-    events.flatMap((event, index) => {
-      const detailSource = detailSourceById[event.id];
-
-      if (!detailSource) {
-        return [];
-      }
-
-      return [[event.id, buildEventDetail(event, detailSource, index, [])]];
-    }),
-  );
+function buildEmptyPlanetPageModel(): PlanetPageViewModel {
+  return {
+    createDefaults: buildCreateDefaults(),
+    emptyState: planetEmptyState,
+    eventDetails: {},
+    events: [],
+    header: planetHeader,
+  };
 }
 
 export async function buildPlanetPageViewModel(
   input?: BuildPlanetPageViewModelInput,
 ): Promise<PlanetPageViewModel> {
-  if (input?.relationshipId) {
-    const storedEvents = await db.memoryEvent.findMany({
-      include: {
-        eventPhotos: {
-          orderBy: {
-            uploadedAt: 'desc',
-          },
-        },
-      },
-      orderBy: {
-        memoryDate: 'desc',
-      },
-      where: {
-        deletedAt: null,
-        relationshipId: input.relationshipId,
-      },
-    });
+  if (!input?.relationshipId) {
+    return buildEmptyPlanetPageModel();
+  }
 
-    return {
-      header: planetHeader,
-      events: storedEvents.map((event, index) =>
-        buildEventCard(
-          {
-            bodyPreview:
-              event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
-            eventType: event.eventType,
-            id: event.id,
-            locationText: event.locationText,
-            memoryDate: event.memoryDate.toISOString().slice(0, 10),
-            title: event.title,
-            updatedAt: event.updatedAt.toISOString(),
-            updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
-          },
-          index,
-          buildMemoryStrip(
-            event.eventPhotos.map((eventPhoto) => ({
-              id: eventPhoto.id,
-              thumbnailUrl: eventPhoto.thumbnailUrl,
-            })),
-            event.title,
-          ),
-        ),
-      ),
-      eventDetails: Object.fromEntries(
-        storedEvents.map((event, index) => [
+  const { result: storedEvents } = await eventService.listEvents(input.relationshipId);
+
+  return {
+    createDefaults: buildCreateDefaults(),
+    emptyState: planetEmptyState,
+    eventDetails: Object.fromEntries(
+      storedEvents.map((event, index) => {
+        const summary: MemoryEventSummary = {
+          bodyPreview:
+            event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
+          eventType: event.eventType,
+          id: event.id,
+          locationText: event.locationText,
+          memoryDate: event.memoryDate.toISOString().slice(0, 10),
+          title: event.title,
+          updatedAt: event.updatedAt.toISOString(),
+          updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
+        };
+
+        return [
           event.id,
           buildEventDetail(
-            {
-              bodyPreview:
-                event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
-              eventType: event.eventType,
-              id: event.id,
-              locationText: event.locationText,
-              memoryDate: event.memoryDate.toISOString().slice(0, 10),
-              title: event.title,
-              updatedAt: event.updatedAt.toISOString(),
-              updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
-            },
-            {
-              body: event.body,
-              locationText: event.locationText,
-            },
+            summary,
             index,
+            event.body,
+            event.locationText,
             buildMemoryStrip(
               event.eventPhotos.map((eventPhoto) => ({
                 id: eventPhoto.id,
@@ -190,43 +146,34 @@ export async function buildPlanetPageViewModel(
               event.title,
             ),
           ),
-        ]),
-      ),
-      createDefaults,
-      emptyState: planetEmptyState,
-    };
-  }
-
-  const mockRecords = input?.events ? null : presentMockEventRecords();
-  const source = input?.events ?? presentMockEvents();
-  const detailSourceById =
-    input?.eventDetailSourceById ??
-    Object.fromEntries(
-      (mockRecords ?? []).map((record) => [
-        record.id,
-        {
-          body: record.body,
-          locationText: record.locationText ?? null,
-        },
-      ]),
-    );
-  const ordered = [...source].sort((left, right) => right.memoryDate.localeCompare(left.memoryDate));
-
-  return {
-    header: planetHeader,
-    events: ordered.map((event, index) => buildEventCard(event, index, [])),
-    eventDetails: Object.fromEntries(
-      Object.entries(buildDetailMap(ordered, detailSourceById)).map(([eventId, detail]) => [
-        eventId,
-        detail
-          ? {
-              ...detail,
-              memoryStrip: [],
-            }
-          : detail,
-      ]),
+        ];
+      }),
     ),
-    createDefaults,
-    emptyState: planetEmptyState,
+    events: storedEvents.map((event, index) => {
+      const summary: MemoryEventSummary = {
+        bodyPreview:
+          event.body.length > 120 ? `${event.body.slice(0, 117).trimEnd()}...` : event.body,
+        eventType: event.eventType,
+        id: event.id,
+        locationText: event.locationText,
+        memoryDate: event.memoryDate.toISOString().slice(0, 10),
+        title: event.title,
+        updatedAt: event.updatedAt.toISOString(),
+        updatedBy: event.updatedBy === event.createdBy ? 'You' : 'Shared editor',
+      };
+
+      return buildEventCard(
+        summary,
+        index,
+        buildMemoryStrip(
+          event.eventPhotos.map((eventPhoto) => ({
+            id: eventPhoto.id,
+            thumbnailUrl: eventPhoto.thumbnailUrl,
+          })),
+          event.title,
+        ),
+      );
+    }),
+    header: planetHeader,
   };
 }

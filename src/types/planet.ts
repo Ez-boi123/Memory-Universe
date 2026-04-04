@@ -49,6 +49,7 @@ export interface PlanetEventFormValues {
   eventType: EventType;
   locationText: string;
   body: string;
+  syncToMilkyWay: boolean;
 }
 
 export interface PlanetEmptyStateViewModel {

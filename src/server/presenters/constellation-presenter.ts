@@ -1,4 +1,3 @@
-import { presentMockMessages } from '@/server/presenters/message-presenter';
 import type {
   ConstellationMessageCardViewModel,
   ConstellationPageViewModel,
@@ -30,7 +29,7 @@ function toMessageCard(message: MessageSummary): ConstellationMessageCardViewMod
 export function buildConstellationViewModel(
   args: BuildConstellationViewModelArgs = {}
 ): ConstellationPageViewModel {
-  const messages = (args.messages ?? presentMockMessages())
+  const messages = (args.messages ?? [])
     .slice()
     .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))
     .map(toMessageCard);

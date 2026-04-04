@@ -1,6 +1,35 @@
-import { notImplemented } from '@/lib/utils/placeholder';
+import { db } from '@/lib/db/client';
 
 export const messageRepository = {
-  listByRelationship: async () => notImplemented('message list query'),
-  create: async () => notImplemented('message persistence'),
+  listByRelationship: async (relationshipId: string) =>
+    db.message.findMany({
+      include: {
+        author: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: {
+        relationshipId,
+      },
+    }),
+  create: async ({
+    authorId,
+    content,
+    relationshipId,
+  }: {
+    authorId: string;
+    content: string;
+    relationshipId: string;
+  }) =>
+    db.message.create({
+      data: {
+        authorId,
+        content,
+        relationshipId,
+      },
+      include: {
+        author: true,
+      },
+    }),
 };

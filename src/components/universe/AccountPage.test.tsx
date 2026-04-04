@@ -28,7 +28,7 @@ const model: AccountPageViewModel = {
     title: 'Associated Relationships',
     description: '',
     emptyTitle: 'No relationships connected yet',
-    emptyBody: 'Use your relation code to bind this account to a shared memory universe.',
+    emptyBody: 'Use your personal relation code to connect this account to a shared memory universe.',
     items: [
       {
         id: 'relationship-1',
@@ -44,8 +44,8 @@ const model: AccountPageViewModel = {
   },
   relationCode: {
     title: 'Relation Code',
-    description: 'Use this code to bind a relationship to your account.',
-    code: 'MU-REL-2048',
+    description: 'This is your personal relation code. Share it when another flow needs to identify your account.',
+    code: 'MU-USER-2048',
     copyLabel: 'Copy Code',
     bindLabel: 'Bind',
     bindHint: '',

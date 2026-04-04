@@ -10,9 +10,14 @@ export const eventRepository = {
           },
         },
       },
-      orderBy: {
-        memoryDate: 'desc',
-      },
+      orderBy: [
+        {
+          updatedAt: 'desc',
+        },
+        {
+          memoryDate: 'desc',
+        },
+      ],
       where: {
         deletedAt: null,
         relationshipId,
@@ -22,6 +27,65 @@ export const eventRepository = {
     db.memoryEvent.findUnique({
       include: {
         eventPhotos: true,
+      },
+      where: {
+        id: eventId,
+      },
+    }),
+  update: async ({
+    body,
+    eventId,
+    eventType,
+    locationText,
+    memoryDate,
+    title,
+    updatedBy,
+  }: {
+    body: string;
+    eventId: string;
+    eventType?: 'anniversary' | 'travel' | 'daily' | 'festival';
+    locationText?: string;
+    memoryDate: Date;
+    title: string;
+    updatedBy: string;
+  }) =>
+    db.memoryEvent.update({
+      data: {
+        body,
+        eventType: eventType ?? null,
+        locationText: locationText || null,
+        memoryDate,
+        title,
+        updatedBy,
+      },
+      include: {
+        eventPhotos: {
+          orderBy: {
+            uploadedAt: 'desc',
+          },
+        },
+      },
+      where: {
+        id: eventId,
+      },
+    }),
+  deleteEventPhotosByIds: async (ids: string[]) => {
+    if (ids.length === 0) {
+      return;
+    }
+
+    await db.eventPhoto.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+  },
+  softDelete: async (eventId: string) =>
+    db.memoryEvent.update({
+      data: {
+        deletedAt: new Date(),
       },
       where: {
         id: eventId,

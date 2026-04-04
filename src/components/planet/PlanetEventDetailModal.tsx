@@ -9,6 +9,8 @@ interface PlanetEventDetailModalProps {
   event: PlanetEventDetailViewModel;
   isEntering: boolean;
   onClose: () => void;
+  onDelete: () => void;
+  onEdit: () => void;
   onImageOpen: (photoId: string) => void;
 }
 
@@ -16,6 +18,8 @@ export function PlanetEventDetailModal({
   event,
   isEntering,
   onClose,
+  onDelete,
+  onEdit,
   onImageOpen,
 }: PlanetEventDetailModalProps) {
   return (
@@ -35,7 +39,7 @@ export function PlanetEventDetailModal({
         </button>
         <div className="planet-detail-layout">
           <PlanetEventDetailMediaStage event={event} onImageOpen={onImageOpen} />
-          <PlanetEventDetailContent event={event} />
+          <PlanetEventDetailContent event={event} onDelete={onDelete} onEdit={onEdit} />
         </div>
       </div>
     </div>

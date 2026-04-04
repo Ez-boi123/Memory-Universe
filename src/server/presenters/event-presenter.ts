@@ -45,5 +45,14 @@ export function presentMockEventRecords(): MockMemoryEventRecord[] {
 }
 
 export function presentMockEvents(): MemoryEventSummary[] {
-  return presentMockEventRecords().map(({ body: _body, ...summary }) => summary);
+  return presentMockEventRecords().map((record) => ({
+    bodyPreview: record.bodyPreview,
+    eventType: record.eventType,
+    id: record.id,
+    locationText: record.locationText,
+    memoryDate: record.memoryDate,
+    title: record.title,
+    updatedAt: record.updatedAt,
+    updatedBy: record.updatedBy,
+  }));
 }

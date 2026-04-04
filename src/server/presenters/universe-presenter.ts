@@ -3,11 +3,26 @@ import type { UniversePageViewModel } from '@/types/universe';
 
 interface BuildUniverseViewModelArgs {
   relationship: RelationshipSummary;
+  latestEvent?: {
+    memoryDate: string;
+    title: string;
+  } | null;
+  latestMessage?: {
+    authorName: string;
+    content: string;
+  } | null;
+  latestPhoto?: {
+    memoryDate?: string | null;
+    title: string;
+  } | null;
   sessionUser: SessionUserSummary | null;
 }
 
 export function buildUniverseViewModel({
   relationship,
+  latestEvent,
+  latestMessage,
+  latestPhoto,
   sessionUser,
 }: BuildUniverseViewModelArgs): UniversePageViewModel {
   const isPending = relationship.status === 'pending';
@@ -39,18 +54,22 @@ export function buildUniverseViewModel({
   const recentPreview: UniversePageViewModel['recentPreview'] = [
     {
       label: 'Latest Event',
-      title: 'First Shared Chapter',
-      description: 'Placeholder preview for the latest event card until repository reads are connected.',
+      title: latestEvent?.title ?? 'No event recorded yet',
+      description: latestEvent
+        ? `Saved for ${latestEvent.memoryDate}. Open Memory Planet to revisit or expand it.`
+        : 'Shared events will surface here once your first memory is saved.',
     },
     {
       label: 'Latest Photo Moment',
-      title: 'A Memory Waiting In Time',
-      description: 'Placeholder preview for the latest archived photo moment until timeline data is connected.',
+      title: latestPhoto?.title ?? 'No archived photo yet',
+      description: latestPhoto?.memoryDate
+        ? `Archived into the timeline on ${latestPhoto.memoryDate}.`
+        : 'Archived photo moments will appear here once the first upload is confirmed.',
     },
     {
       label: 'Latest Message',
-      title: 'A Small Note Still Glowing',
-      description: 'Placeholder preview for the latest relationship message until message queries are connected.',
+      title: latestMessage?.authorName ?? 'No message yet',
+      description: latestMessage?.content ?? 'The most recent short note will appear here once one is written.',
     },
   ] as const;
 

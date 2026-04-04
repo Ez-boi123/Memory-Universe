@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const topNavItems = [
   { href: '/universe', label: 'Universe' },
@@ -13,6 +16,8 @@ interface AppTopNavigationProps {
 }
 
 export function AppTopNavigation({ displayName }: AppTopNavigationProps) {
+  const pathname = usePathname();
+
   return (
     <header className="app-top-nav">
       <div className="app-top-nav-inner">
@@ -20,11 +25,21 @@ export function AppTopNavigation({ displayName }: AppTopNavigationProps) {
           Memory Universe
         </Link>
         <nav className="app-top-nav-links" aria-label="Primary">
-          {topNavItems.map((item) => (
-            <Link key={item.href} className="app-top-nav-link" href={item.href}>
-              {item.label}
-            </Link>
-          ))}
+          {topNavItems.map((item) => {
+            const isCurrent =
+              pathname === item.href || (item.href !== '/universe' && pathname?.startsWith(item.href));
+
+            return (
+              <Link
+                key={item.href}
+                aria-current={isCurrent ? 'page' : undefined}
+                className={isCurrent ? 'app-top-nav-link is-current' : 'app-top-nav-link'}
+                href={item.href}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <Link
           aria-label="Profile"

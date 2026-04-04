@@ -110,3 +110,36 @@ export async function signOutAction() {
     redirectTo: '/sign-in',
   });
 }
+
+export async function deleteAccountAction() {
+  if (!isDatabaseConfigured()) {
+    redirect(
+      buildRedirectUrl('/settings/account', {
+        error: getDatabaseConfigurationError(),
+      })
+    );
+  }
+
+  const { getSessionUser } = await import('@/lib/auth/session');
+  const { user } = await getSessionUser();
+
+  if (!user?.id) {
+    redirect('/');
+  }
+
+  const { authService } = await import('@/server/services/auth-service');
+  const result = await authService.deleteAccount(user.id);
+
+  if (!result.ok) {
+    redirect(
+      buildRedirectUrl('/settings/account', {
+        error: result.error,
+      })
+    );
+  }
+
+  const { signOut } = await import('@/auth');
+  await signOut({
+    redirectTo: '/',
+  });
+}

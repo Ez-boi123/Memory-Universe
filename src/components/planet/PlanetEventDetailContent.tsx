@@ -4,9 +4,15 @@ import type { PlanetEventDetailViewModel } from '@/types/planet';
 
 interface PlanetEventDetailContentProps {
   event: PlanetEventDetailViewModel;
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
-export function PlanetEventDetailContent({ event }: PlanetEventDetailContentProps) {
+export function PlanetEventDetailContent({
+  event,
+  onDelete,
+  onEdit,
+}: PlanetEventDetailContentProps) {
   return (
     <section className="planet-detail-content" data-testid="planet-detail-content">
       <div className="planet-detail-meta">
@@ -22,6 +28,15 @@ export function PlanetEventDetailContent({ event }: PlanetEventDetailContentProp
 
       <div className="planet-detail-body">
         <p>{event.body}</p>
+      </div>
+
+      <div className="planet-detail-actions">
+        <button className="planet-detail-secondary-action" onClick={onEdit} type="button">
+          Edit
+        </button>
+        <button className="planet-detail-danger-action" onClick={onDelete} type="button">
+          Delete
+        </button>
       </div>
     </section>
   );

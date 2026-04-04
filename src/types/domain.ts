@@ -15,6 +15,7 @@ export interface SessionUserSummary {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  relationCode?: string | null;
   relationshipId?: string | null;
   relationshipStatus?: RelationshipStatus | null;
   authState?: 'placeholder' | 'authenticated';
@@ -41,9 +42,16 @@ export interface MemoryEventSummary {
 export interface PhotoSummary {
   id: string;
   archiveStatus: PhotoArchiveStatus;
+  displayUrl?: string | null;
   memoryDate?: string | null;
+  note?: string | null;
+  eventTitle?: string | null;
+  thumbnailUrl?: string | null;
   uploadedAt: string;
   relatedEventId?: string | null;
+  relatedEventBody?: string | null;
+  relatedEventLocationText?: string | null;
+  relatedEventTitle?: string | null;
 }
 
 export interface MessageSummary {

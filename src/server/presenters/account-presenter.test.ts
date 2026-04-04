@@ -9,7 +9,7 @@ describe('buildAccountPageViewModel', () => {
     expect(model.hero.displayName).toBe('Member One');
     expect(model.relationships.items).toHaveLength(0);
     expect(model.hero.relationshipCountValue).toBe('0 shared universes');
-    expect(model.relationCode.code).toBe('MU-REL-2048');
+    expect(model.relationCode.code).toBe('MU-USER-2048');
     expect(model.security.actionLabel).toBe('Change Password');
     expect(model.dangerZone.signOutLabel).toBe('Sign Out');
   });
@@ -56,6 +56,6 @@ describe('buildAccountPageViewModel', () => {
     expect(model.hero.summaryValue).toBe('Authenticated Account');
     expect(model.hero.relationshipCountValue).toBe('1 shared universe');
     expect(model.relationships.items[0]?.title).toBe('Real Universe');
-    expect(model.relationCode.code).toBe('MU-RELATION');
+    expect(model.relationCode.code).toBe('MU-U-USER1');
   });
 });

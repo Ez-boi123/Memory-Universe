@@ -12,6 +12,7 @@ function buildPlaceholderSession(session: Session) {
     user: {
       ...session.user,
       id: session.user?.id ?? 'placeholder-user-id',
+      relationCode: null,
       relationshipId: null,
       relationshipStatus: null,
       authState: 'placeholder' as const,
@@ -61,6 +62,7 @@ export const authConfig: NextAuthConfig = {
           email: result.user.email,
           name: result.user.name ?? result.user.displayName,
           image: result.user.image ?? result.user.avatarUrl,
+          relationCode: result.user.relationCode ?? null,
           relationshipId: membership?.relationshipId ?? null,
           relationshipStatus: membership?.relationship.status ?? null,
           authState: 'authenticated' as const,
@@ -71,6 +73,7 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.relationCode = user.relationCode ?? null;
         token.relationshipId = user.relationshipId ?? null;
         token.relationshipStatus = user.relationshipStatus ?? null;
         token.authState = user.authState ?? 'authenticated';
@@ -89,6 +92,7 @@ export const authConfig: NextAuthConfig = {
           name: session.user?.name ?? null,
           email: session.user?.email ?? null,
           image: session.user?.image ?? null,
+          relationCode: typeof token.relationCode === 'string' ? token.relationCode : null,
           relationshipId:
             typeof token.relationshipId === 'string' ? token.relationshipId : null,
           relationshipStatus:
