@@ -4195,15 +4195,26 @@ main {
 }
 
 .auth-shell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: min(640px, calc(100% - 48px));
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: 48px 0 72px;
+  padding: 32px 0;
+}
+
+.auth-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .auth-page {
   position: relative;
   overflow: clip;
   min-height: 100vh;
+  min-height: 100dvh;
   background:
     radial-gradient(circle at top, rgba(111, 89, 255, 0.16), transparent 28%),
     radial-gradient(circle at 18% 24%, rgba(255, 115, 196, 0.14), transparent 24%),
@@ -4443,6 +4454,46 @@ main {
   margin-top: 20px;
 }
 
+@media (max-height: 820px) {
+  .auth-shell {
+    padding: 16px 0;
+  }
+
+  .auth-card {
+    padding: 24px;
+  }
+
+  .auth-back-link {
+    margin-bottom: 14px;
+  }
+
+  .auth-chip-row {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .auth-chip {
+    padding: 7px 12px;
+  }
+
+  .auth-card-intro {
+    margin-bottom: 14px;
+  }
+
+  .auth-form {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .auth-form-note {
+    padding: 10px 14px;
+  }
+
+  .auth-footer {
+    margin-top: 16px;
+  }
+}
+
 @media (max-width: 900px) {
   .page-shell {
     width: min(100% - 32px, 1120px);
@@ -4459,8 +4510,7 @@ main {
 
   .auth-shell {
     width: min(100% - 24px, 640px);
-    padding-top: 16px;
-    padding-bottom: 48px;
+    padding: 16px 0;
   }
 
   .auth-card {
