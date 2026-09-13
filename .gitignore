@@ -7,6 +7,14 @@ coverage
 dist
 *.tsbuildinfo
 .worktrees
-.codex/environments
 __pycache__
 *.pyc
+
+# AI-assisted development instructions and planning artifacts
+AGENTS.md
+SPEC.md
+PRD.md
+TECHNICAL_PLAN.md
+.agents/
+.codex/
+docs/superpowers/
